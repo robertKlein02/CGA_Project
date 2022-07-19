@@ -1,11 +1,11 @@
-mtllib ground.mtl
+mtllib Unbenannt.mtl
 g Plane
 
 # Vertex Positions:
-v 44.13334 0 2243.55518
-v -44.13334 0.00002 -2243.55518
-v -44.13334 0 2243.55518
-v 44.13334 0.00002 -2243.55518
+v 7.5 0 15
+v -7.5 0.00002 -15
+v -7.5 0 15
+v 7.5 0.00002 -15
 
 # Vertex Texture Coordinates:
 vt 0.9999 0.0001 

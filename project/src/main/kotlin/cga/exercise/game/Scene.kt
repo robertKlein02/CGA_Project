@@ -42,6 +42,12 @@ class Scene(private val window: GameWindow) {
     val ground: Renderable
     val sphere: Renderable
     var cycle : Renderable
+
+
+
+    var speed:Float=2f
+    var zahl:Int=200
+
     val sphere2:Renderable
     val sphere3:Renderable
     val sphere4:Renderable
@@ -49,6 +55,9 @@ class Scene(private val window: GameWindow) {
     val sphere6:Renderable
     val sphere7:Renderable
     val sphere8:Renderable
+
+    private val grounds = ArrayList<Renderable?>()
+    private var groundZPos = 0f
 
 
     val camera = TronCamera()
@@ -73,7 +82,7 @@ class Scene(private val window: GameWindow) {
 
 
     // Define Vertices and Indices of Cubemap
-    private var size: Float = 500.0f
+    private var size: Float = 50000.0f
     private var skyboxVertices: FloatArray = floatArrayOf(
         -size, -size, size,
         size, -size, size,
@@ -108,6 +117,7 @@ class Scene(private val window: GameWindow) {
 
     private var cubeMap = CubemapTexture(skyboxVertices, skyboxIndices)
     private var cubeMapTexture = glGenTextures()
+
 
 
     private var direction = 0.0f
@@ -167,7 +177,7 @@ class Scene(private val window: GameWindow) {
         groundSpecTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
         val groundShininess = 60f
-        val groundTCMultiplier = Vector2f(200f,200f)
+        val groundTCMultiplier = Vector2f(20f,20f)
 
 
         val groundMaterial = Material(groundDiffTexture, groundEmitTexture, groundSpecTexture, groundShininess,
@@ -199,8 +209,9 @@ class Scene(private val window: GameWindow) {
             meshListGround.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes, groundMaterial))
         }
 
-        bodenmatrix.scale(3f)
+        bodenmatrix.scale(30f)
         bodenmatrix.rotateX(90f)
+
 
 
         kugelMatrix.scale(0.5f)
@@ -217,7 +228,7 @@ class Scene(private val window: GameWindow) {
         sphere8 = Renderable(meshListSphere2)
 
         camera.rotateLocal(Math.toRadians(-35f),0f, 0f)
-        camera.translateLocal(Vector3f(0f, 0f, 20f))
+        camera.translateLocal(Vector3f(0f, 0f, 30f))
 
         //camera.rotateLocal(Math.toRadians(-15f),0f, 0f)
         //camera.translateLocal(Vector3f(0f, 0f, 8f))
@@ -225,9 +236,17 @@ class Scene(private val window: GameWindow) {
         cycle = ModelLoader.loadModel("assets/light Cycle/Car/SCI_FRS_13_HD.obj",
                 toRadians(0f), toRadians(180f), 0f)?: throw Exception("Renderable can't be NULL!")
 
-        cycle.scaleLocal(Vector3f(0.01f))
-        cycle.setPosition(0f,-50f,0f)
+        cycle.scaleLocal(Vector3f(0.09f))
+        cycle.setPosition(0f,-50f,-0f)
         camera.parent = cycle
+
+
+
+
+
+
+
+
 
 
         pointLight = PointLight(Vector3f(0f, 1f, 0f), Vector3f(1f, 0f, 0f),
@@ -277,6 +296,8 @@ class Scene(private val window: GameWindow) {
         sphere5.parent=sphere4
 
 
+
+
         sphere5.scaleLocal(Vector3f(0.4f))
         sphere6.scaleLocal(Vector3f(0.4f))
         sphere7.scaleLocal(Vector3f(0.4f))
@@ -298,20 +319,23 @@ class Scene(private val window: GameWindow) {
         sphere7.setPosition(2f, 0f,2f)
         sphere8.setPosition(2f, 0f,2f)
 
+        ground.setPosition(0f,-50f,-10f)
     }
 
     fun render(dt: Float, t: Float) {
-       // println(cycle.getPosition())
-
-
+       //println(cycle.getPosition())
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         // -----------------------rendering Skybox----------------------------
         glDepthFunc(GL_LEQUAL)
         skyboxShader.use()
 
+
+
+
         skyboxShader.setUniform("view", camera.getCalculateViewMatrix(), false)
         skyboxShader.setUniform("projection", camera.getCalculateProjectionMatrix(), false)
+
 
         GL30.glBindVertexArray(cubeMap.skyboxVAO)
         GL30.glActiveTexture(GL30.GL_TEXTURE0)
@@ -322,22 +346,29 @@ class Scene(private val window: GameWindow) {
         glDepthFunc(GL_LESS);
 
 
+
         tronShader.use()
         tronShader.setUniform("farbe", Vector3f(0.6f,0.6f,0.6f))
-
 
 
 
         camera.bind(tronShader)
 
 
+        if(zahl==200) {
+            spawnGround()
+            zahl=0
+        }
+        zahl+=1
+        println(zahl)
 
-
+        grounds[grounds.size-1]?.render(tronShader)
 
         spotLight1.lightColor.set(Vector3f(1f, abs(sin(t/0.3f)), abs(sin(t/0.3f))))
         //spotLight2.lightColor.set(Vector3f(abs(sin(t/0.01f)), abs(sin(t/0.01f)), abs(sin(t/0.01f))))
         //spotLight3.lightColor.set(Vector3f(abs(sin(t/0.01f)), abs(sin(t/0.01f)), abs(sin(t/0.01f))))
         //spotLight4.lightColor.set(Vector3f(abs(sin(t/0.01f)), abs(sin(t/0.01f)), abs(sin(t/0.01f))))
+
 
 
 
@@ -350,49 +381,88 @@ class Scene(private val window: GameWindow) {
 
 
         tronShader.setUniform("farbe", Vector3f(0.5f,0.5f,0.5f))
-        ground.setPosition(0f,-50f,0f)
-        ground.render(tronShader)
+
+
+
+
+
+
 
 
 
 
 
     }
+
+
+
 
     fun update(dt: Float, t: Float) {
 
+     cycle.translateGlobal(Vector3f(0f, 0f, speed * -dt))
+
+     when {
+         window.getKeyState(GLFW_KEY_A) -> {
+             cycle.translateLocal(Vector3f(100 * -dt, 0f, 0f))
+         }
+         window.getKeyState(GLFW_KEY_D) -> {
+             cycle.translateLocal(Vector3f(100 * dt, 0f, 0f))
+         }
+     }
+ }
 
 
-        when {
-            window.getKeyState(GLFW_KEY_W) -> {
-                if (window.getKeyState(GLFW_KEY_A)) {
-
-                    cycle.rotateLocal(0f,1.5f * dt,0f)
 
 
-                }
-                if (window.getKeyState(GLFW_KEY_D)) {
 
-                    cycle.rotateLocal(0f, 1.5f * -dt,0f)
+ //       when {
+ //           window.getKeyState(GLFW_KEY_W) -> {
+ //               if (window.getKeyState(GLFW_KEY_A)) {
+//
+ //                   cycle.rotateLocal(0f,1.5f * dt,0f)
+//
+//
+ //               }
+ //               if (window.getKeyState(GLFW_KEY_D)) {
+//
+ //                   cycle.rotateLocal(0f, 1.5f * -dt,0f)
+//
+ //               }
+ //               cycle.translateLocal(Vector3f(0f, 0f, 50 * -dt))
+ //           }
+ //           window.getKeyState(GLFW_KEY_S) -> {
+ //               if (window.getKeyState(GLFW_KEY_A)) {
+ //                   cycle.rotateLocal(0f,1.5f * dt,0f)
+ //               }
+ //               if (window.getKeyState(GLFW_KEY_D)) {
+ //                   cycle.rotateLocal(0f, 1.5f * -dt,0f)
+ //               }
+ //               cycle.translateLocal(Vector3f(0f, 0f, 2f * dt))
+ //           }
+ //       }
+//
 
-                }
-                cycle.translateLocal(Vector3f(0f, 0f, 50 * -dt))
-            }
-            window.getKeyState(GLFW_KEY_S) -> {
-                if (window.getKeyState(GLFW_KEY_A)) {
-                    cycle.rotateLocal(0f,1.5f * dt,0f)
-                }
-                if (window.getKeyState(GLFW_KEY_D)) {
-                    cycle.rotateLocal(0f, 1.5f * -dt,0f)
-                }
-                cycle.translateLocal(Vector3f(0f, 0f, 2f * dt))
-            }
+
+        fun spawnGround() {
+            var newRing = ground
+            speed+=0.01f
+            grounds.add(newRing)
+            grounds[grounds.size - 1]?.translateLocal(
+                Vector3f(
+                    0f,
+                    0f,
+                    groundZPos
+                )
+            )
+            grounds[grounds.size - 1]?.scaleLocal(Vector3f(1f))
+            groundZPos = -speed
+
         }
-    }
 
     fun onKey(key: Int, scancode: Int, action: Int, mode: Int) {}
 
     fun onMouseMove(xpos: Double, ypos: Double) {
+
         val deltaX = xpos - oldMousePosX
         //var deltaY = ypos - oldMousePosY
 
@@ -405,6 +475,8 @@ class Scene(private val window: GameWindow) {
         }
 
         notFirstFrame = true
+
+
     }
 
     fun cleanup() {}
