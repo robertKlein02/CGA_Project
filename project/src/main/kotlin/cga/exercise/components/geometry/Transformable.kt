@@ -1,5 +1,6 @@
 package cga.exercise.components.geometry
 
+import org.joml.Math
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -74,4 +75,10 @@ open class Transformable : ITransformable {
         //model_matrix = Matrix4f().translate(Vector3f(x,y,z))
         modelMatrix.setTranslation(x,y,z)
     }
+
+    fun getXDir() = java.lang.Math.atan2(modelMatrix.m11().toDouble(), modelMatrix.m12().toDouble())
+
+    fun getYDir() = java.lang.Math.atan2(modelMatrix.m00().toDouble(), modelMatrix.m02().toDouble())
+
+    fun getZDir() = Math.asin(modelMatrix.m01()).toDouble()
 }

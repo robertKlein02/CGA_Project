@@ -32,6 +32,9 @@ class Scene(private val window: GameWindow) {
     private val staticShader: ShaderProgram
     private val tronShader: ShaderProgram
     private val skyboxShader: ShaderProgram
+    private val negativeShader: ShaderProgram
+
+    private var shaderInUse: ShaderProgram
 
     private val meshListSphere = mutableListOf<Mesh>()
     private val meshListSphere2 = mutableListOf<Mesh>()
@@ -45,7 +48,7 @@ class Scene(private val window: GameWindow) {
 
 
 
-    var speed:Float=2f
+    var speed:Float=1f
     var zahl:Int=200
 
     val sphere2:Renderable
@@ -128,6 +131,9 @@ class Scene(private val window: GameWindow) {
         skyboxShader = ShaderProgram("assets/shaders/skyBoxVert.glsl", "assets/shaders/skyBoxFrag.glsl")
         staticShader = ShaderProgram("assets/shaders/simple_vert.glsl", "assets/shaders/simple_frag.glsl")
         tronShader = ShaderProgram("assets/shaders/tron_vert.glsl", "assets/shaders/tron_frag.glsl")
+        negativeShader = ShaderProgram("assets/shaders/tron_vert.glsl", "assets/shaders/negative_frag.glsl")
+
+        shaderInUse = tronShader
         //initial opengl state
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f); GLError.checkThrow()
@@ -158,7 +164,7 @@ class Scene(private val window: GameWindow) {
         val objMeshListSphere : MutableList<OBJLoader.OBJMesh> = objResSphere.objects[0].meshes
         val objMeshListSphere2 : MutableList<OBJLoader.OBJMesh> = objResSphere.objects[0].meshes
 
-        val objResGround : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/ground.obj")
+        val objResGround : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/groundFinal.obj")
         val objMeshListGround : MutableList<OBJLoader.OBJMesh> = objResGround.objects[0].meshes
 
         val stride = 8 * 4
@@ -177,7 +183,7 @@ class Scene(private val window: GameWindow) {
         groundSpecTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
         val groundShininess = 60f
-        val groundTCMultiplier = Vector2f(20f,20f)
+        val groundTCMultiplier = Vector2f(15f,100f)
 
 
         val groundMaterial = Material(groundDiffTexture, groundEmitTexture, groundSpecTexture, groundShininess,
@@ -237,7 +243,7 @@ class Scene(private val window: GameWindow) {
                 toRadians(0f), toRadians(180f), 0f)?: throw Exception("Renderable can't be NULL!")
 
         cycle.scaleLocal(Vector3f(0.09f))
-        cycle.setPosition(0f,-50f,-0f)
+        cycle.setPosition(0f,-50f,40f)
         camera.parent = cycle
 
 
@@ -319,7 +325,7 @@ class Scene(private val window: GameWindow) {
         sphere7.setPosition(2f, 0f,2f)
         sphere8.setPosition(2f, 0f,2f)
 
-        ground.setPosition(0f,-50f,-10f)
+        ground.setPosition(0f,-50f,-0f)
     }
 
     fun render(dt: Float, t: Float) {
@@ -347,46 +353,50 @@ class Scene(private val window: GameWindow) {
 
 
 
-        tronShader.use()
-        tronShader.setUniform("farbe", Vector3f(0.6f,0.6f,0.6f))
+        shaderInUse.use()
 
 
 
-        camera.bind(tronShader)
+        staticShader.setUniform("farbe", Vector3f(0f,1f,0f))
+
+        camera.bind(shaderInUse)
 
 
-        if(zahl==200) {
-            spawnGround()
-            zahl=0
+        cycle.render(shaderInUse)
+
+
+
+        for(ground in grounds){
+            this.ground.render(shaderInUse)
         }
-        zahl+=1
-        println(zahl)
-
-        grounds[grounds.size-1]?.render(tronShader)
-
-        spotLight1.lightColor.set(Vector3f(1f, abs(sin(t/0.3f)), abs(sin(t/0.3f))))
-        //spotLight2.lightColor.set(Vector3f(abs(sin(t/0.01f)), abs(sin(t/0.01f)), abs(sin(t/0.01f))))
-        //spotLight3.lightColor.set(Vector3f(abs(sin(t/0.01f)), abs(sin(t/0.01f)), abs(sin(t/0.01f))))
-        //spotLight4.lightColor.set(Vector3f(abs(sin(t/0.01f)), abs(sin(t/0.01f)), abs(sin(t/0.01f))))
 
 
 
 
 
 
-        tronShader.setUniform("farbe", Vector3f(1f,1f,1f))
-
-        cycle.render(tronShader)
-
-
-
-        tronShader.setUniform("farbe", Vector3f(0.5f,0.5f,0.5f))
 
 
 
 
 
 
+        shaderInUse.setUniform("farbe", Vector3f(0.5f,0.5f,0.5f))
+
+
+        ground.render(shaderInUse)
+        var differenz= ground.getPosition().z() -cycle.getPosition().z()
+
+
+
+        if (differenz>= (ground.getWorldZAxis().z()+45f)) {
+            ground.setPosition(ground.getPosition().x(), ground.getPosition().y(), cycle.getPosition().z()-45f)
+            speed+=1
+
+        }
+        //println("1 ${cycle.getPosition().z()}")
+       // println("2 ${ground.getPosition().z()}")
+      //  println(differenz)
 
 
 
@@ -403,12 +413,24 @@ class Scene(private val window: GameWindow) {
 
      when {
          window.getKeyState(GLFW_KEY_A) -> {
-             cycle.translateLocal(Vector3f(100 * -dt, 0f, 0f))
+             println(cycle.getPosition().x())
+             if (cycle.getPosition().x()>-7) {
+                 cycle.translateLocal(Vector3f(100 * -dt, 0f, 0f))
+             }
          }
          window.getKeyState(GLFW_KEY_D) -> {
-             cycle.translateLocal(Vector3f(100 * dt, 0f, 0f))
+             if (cycle.getPosition().x()<7) {
+                 cycle.translateLocal(Vector3f(100 * dt, 0f, 0f))
+             }
          }
      }
+        //---------------------Handle shader switching--------------------------------
+        if (window.getKeyState(GLFW_KEY_1)) {
+            shaderInUse = tronShader
+        }
+        if (window.getKeyState(GLFW_KEY_2)) {
+            shaderInUse = negativeShader
+        }
  }
 
 
@@ -445,17 +467,21 @@ class Scene(private val window: GameWindow) {
 
         fun spawnGround() {
             var newRing = ground
-            speed+=0.01f
-            grounds.add(newRing)
-            grounds[grounds.size - 1]?.translateLocal(
-                Vector3f(
-                    0f,
-                    0f,
-                    groundZPos
+
+
+
+
+                grounds.add(newRing)
+                grounds[grounds.size - 1]?.translateLocal(
+                    Vector3f(
+                        0f,
+                        0f,
+                        cycle.getPosition().z()
+                    )
                 )
-            )
-            grounds[grounds.size - 1]?.scaleLocal(Vector3f(1f))
-            groundZPos = -speed
+
+
+
 
         }
 
