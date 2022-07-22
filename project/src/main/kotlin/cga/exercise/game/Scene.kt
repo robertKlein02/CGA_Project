@@ -36,28 +36,26 @@ class Scene(private val window: GameWindow) {
 
     private var shaderInUse: ShaderProgram
 
-    private val meshListSphere = mutableListOf<Mesh>()
-    private val meshListSphere2 = mutableListOf<Mesh>()
+    private val meshListBlock = mutableListOf<Mesh>()
+    private val meshListCurb = mutableListOf<Mesh>()
     private val meshListGround = mutableListOf<Mesh>()
+
     val bodenmatrix: Matrix4f = Matrix4f()
     val kugelMatrix: Matrix4f = Matrix4f()
 
     val ground: Renderable
-    val sphere: Renderable
+    val blockLeft: Renderable
+    val blockRight:Renderable
     var cycle : Renderable
-
+    val curbLeft:Renderable
+    val curbRight:Renderable
 
 
     var speed:Float=1f
     var zahl:Int=200
 
-    val sphere2:Renderable
-    val sphere3:Renderable
-    val sphere4:Renderable
-    val sphere5:Renderable
-    val sphere6:Renderable
-    val sphere7:Renderable
-    val sphere8:Renderable
+
+
 
     private val grounds = ArrayList<Renderable?>()
     private var groundZPos = 0f
@@ -160,12 +158,15 @@ class Scene(private val window: GameWindow) {
 
         cubeMapTexture = cubeMap.loadCubeMap(facesCubeMap)
 
-        val objResSphere : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/sphere.obj")
-        val objMeshListSphere : MutableList<OBJLoader.OBJMesh> = objResSphere.objects[0].meshes
-        val objMeshListSphere2 : MutableList<OBJLoader.OBJMesh> = objResSphere.objects[0].meshes
+        val objResBlock : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/block.obj")
+        val objMeshListBlock : MutableList<OBJLoader.OBJMesh> = objResBlock.objects[0].meshes
+
+        val objResCurb : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/curb.obj")
+        val objMeshListCurb : MutableList<OBJLoader.OBJMesh> = objResCurb.objects[0].meshes
 
         val objResGround : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/groundFinal.obj")
         val objMeshListGround : MutableList<OBJLoader.OBJMesh> = objResGround.objects[0].meshes
+
 
         val stride = 8 * 4
         val attrPos = VertexAttribute(3, GL_FLOAT, stride, 0)
@@ -189,27 +190,36 @@ class Scene(private val window: GameWindow) {
         val groundMaterial = Material(groundDiffTexture, groundEmitTexture, groundSpecTexture, groundShininess,
                 groundTCMultiplier)
 
-        val sphereEmitTexture = Texture2D("assets/textures/sphere_emit.png", true)
-        val sphere2EmitTexture = Texture2D("assets/textures/sphere2_emit.png", true)
-        val sphereDiffTexture = Texture2D("assets/textures/sphere_diff.png", true)
-        val sphereSpecTexture = Texture2D("assets/textures/sphere_spec.png", true)
+        val blockEmitTexture = Texture2D("assets/models/block/Standardmaterial_baseColor.jpg", true)
+        val blockDiffTexture = Texture2D("assets/models/block/Standardmaterial_baseColor.jpg", true)
+        val blockSpecTexture = Texture2D("assets/models/block/Standardmaterial_baseColor.jpg", true)
 
-        val sphereShininess = 1f
-        val sphereTCMultiplier = Vector2f(1f)
+        val blockShininess = 1f
+        val blockTCMultiplier = Vector2f(15f,2f)
 
-        val sphereMaterial = Material(sphereDiffTexture, sphereEmitTexture, sphereSpecTexture, sphereShininess,
-            sphereTCMultiplier)
+        val blockMaterial = Material(blockDiffTexture, blockEmitTexture, blockSpecTexture, blockShininess,
+            blockTCMultiplier)
 
-        val sphereMaterial2 = Material(sphereDiffTexture, sphere2EmitTexture, sphereSpecTexture, sphereShininess,
-            sphereTCMultiplier)
+        val curbEmitTexture = Texture2D("assets/textures/ground_diff.png", true)
+        val curbDiffTexture = Texture2D("assets/textures/ground_diff.png", true)
+        val curbSpecTexture = Texture2D("assets/textures/ground_diff.png", true)
 
-        for (mesh in objMeshListSphere) {
-            meshListSphere.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes,sphereMaterial))
+        val curbShininess = 1f
+        val curbTCMultiplier = Vector2f(15f,100f)
+
+        val curbMaterial = Material(curbDiffTexture, curbEmitTexture, curbSpecTexture, curbShininess,
+            curbTCMultiplier)
+
+
+
+        for (mesh in objMeshListCurb) {
+            meshListCurb.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes,curbMaterial))
         }
 
-        for (mesh in objMeshListSphere2) {
-            meshListSphere2.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes,sphereMaterial2))
+        for (mesh in objMeshListBlock) {
+            meshListBlock.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes,blockMaterial))
         }
+
 
         for (mesh in objMeshListGround) {
             meshListGround.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes, groundMaterial))
@@ -223,18 +233,16 @@ class Scene(private val window: GameWindow) {
         kugelMatrix.scale(0.5f)
 
         ground = Renderable(meshListGround)
-        sphere = Renderable(meshListSphere)
-        sphere2 = Renderable(meshListSphere)
-        sphere3 = Renderable(meshListSphere)
-        sphere4 = Renderable(meshListSphere)
+        blockLeft = Renderable(meshListBlock)
+        blockRight = Renderable(meshListBlock)
 
-        sphere5 = Renderable(meshListSphere2)
-        sphere6 = Renderable(meshListSphere2)
-        sphere7 = Renderable(meshListSphere2)
-        sphere8 = Renderable(meshListSphere2)
+        curbRight = Renderable(meshListCurb)
+        curbLeft = Renderable(meshListCurb)
 
-        camera.rotateLocal(Math.toRadians(-35f),0f, 0f)
-        camera.translateLocal(Vector3f(0f, 0f, 30f))
+
+
+        camera.rotateLocal(Math.toRadians(-20f),0f, 0f)
+        camera.translateLocal(Vector3f(0f, 0f, 20f))
 
         //camera.rotateLocal(Math.toRadians(-15f),0f, 0f)
         //camera.translateLocal(Vector3f(0f, 0f, 8f))
@@ -296,34 +304,18 @@ class Scene(private val window: GameWindow) {
         spotLight5.parent= cycle
 
 
-        sphere8.parent=sphere
-        sphere7.parent=sphere2
-        sphere6.parent=sphere3
-        sphere5.parent=sphere4
 
 
 
 
-        sphere5.scaleLocal(Vector3f(0.4f))
-        sphere6.scaleLocal(Vector3f(0.4f))
-        sphere7.scaleLocal(Vector3f(0.4f))
-        sphere8.scaleLocal(Vector3f(0.4f))
-
-        sphere.scaleLocal(Vector3f(2f))
-        sphere2.scaleLocal(Vector3f(2f))
-        sphere3.scaleLocal(Vector3f(2f))
-        sphere4.scaleLocal(Vector3f(2f))
-        sphere.setPosition(10f, 3f,10f)
-        sphere2.setPosition(10f, 3f,-10f)
-        sphere3.setPosition(-10f, 3f,10f)
-        sphere4.setPosition(-10f, 3f,-10f)
+        blockLeft.setPosition(-11f, -50f,0f)
+        blockRight.setPosition(11f, -50f,0f)
+        curbLeft.setPosition(-8.5f, -50f,0f)
+        curbRight.setPosition(8.5f, -50f,0f)
 
 
 
-        sphere5.setPosition(2f, 0f,2f)
-        sphere6.setPosition(2f, 0f,2f)
-        sphere7.setPosition(2f, 0f,2f)
-        sphere8.setPosition(2f, 0f,2f)
+
 
         ground.setPosition(0f,-50f,-0f)
     }
@@ -356,6 +348,10 @@ class Scene(private val window: GameWindow) {
         shaderInUse.use()
 
 
+        blockLeft.render(shaderInUse)
+        blockRight.render(shaderInUse)
+        curbRight.render(shaderInUse)
+        curbLeft.render(shaderInUse)
 
         staticShader.setUniform("farbe", Vector3f(0f,1f,0f))
 
@@ -391,6 +387,10 @@ class Scene(private val window: GameWindow) {
 
         if (differenz>= (ground.getWorldZAxis().z()+45f)) {
             ground.setPosition(ground.getPosition().x(), ground.getPosition().y(), cycle.getPosition().z()-45f)
+            blockLeft.setPosition(blockLeft.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
+            blockRight.setPosition(blockRight.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
+            curbLeft.setPosition(curbLeft.getPosition().x(), curbLeft.getPosition().y(), ground.getPosition().z())
+            curbRight.setPosition(curbRight.getPosition().x(), curbRight.getPosition().y(), ground.getPosition().z())
             speed+=1
 
         }
@@ -413,13 +413,12 @@ class Scene(private val window: GameWindow) {
 
      when {
          window.getKeyState(GLFW_KEY_A) -> {
-             println(cycle.getPosition().x())
-             if (cycle.getPosition().x()>-7) {
+             if (cycle.getPosition().x()>-7.1) {
                  cycle.translateLocal(Vector3f(100 * -dt, 0f, 0f))
              }
          }
          window.getKeyState(GLFW_KEY_D) -> {
-             if (cycle.getPosition().x()<7) {
+             if (cycle.getPosition().x()<7.1) {
                  cycle.translateLocal(Vector3f(100 * dt, 0f, 0f))
              }
          }
