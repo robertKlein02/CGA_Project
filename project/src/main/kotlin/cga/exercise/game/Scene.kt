@@ -64,6 +64,8 @@ class Scene(private val window: GameWindow) {
 
 
     val camera = TronCamera()
+    val firstPersonCamera = TronCamera()
+    private var activeCamera = camera
 
     val pointLight : PointLight
     val pointLight2 : PointLight
@@ -246,8 +248,10 @@ class Scene(private val window: GameWindow) {
         camera.rotateLocal(Math.toRadians(-20f),0f, 0f)
         camera.translateLocal(Vector3f(0f, 0f, 20f))
 
-        //camera.rotateLocal(Math.toRadians(-15f),0f, 0f)
-        //camera.translateLocal(Vector3f(0f, 0f, 8f))
+        //firstperson Camera
+        firstPersonCamera.rotateLocal(Math.toRadians(-10f),0f, 0f)
+        firstPersonCamera.translateLocal(Vector3f(0f, 4.5f, 2.5f))
+
 
         cycle = ModelLoader.loadModel("assets/light Cycle/Car/SCI_FRS_13_HD.obj",
                 toRadians(0f), toRadians(180f), 0f)?: throw Exception("Renderable can't be NULL!")
@@ -261,20 +265,17 @@ class Scene(private val window: GameWindow) {
         cycle.setPosition(0f,-50f,40f)
         wheel.scaleLocal(Vector3f(0.2f))
         wheel.rotateLocal(0f, toRadians(0f),0f)
+
+        // Kamera parents definieren
         camera.parent = cycle
+        firstPersonCamera.parent = cycle
+
+        // Felgen Versuch
         wheel.parent=cycle
-
-
         wheel.setPosition(-3f,0f,-5f)
 
 
-
-
-
-
-
-
-
+        // Pointlights
 
         pointLight = PointLight(Vector3f(0f, 1f, 0f), Vector3f(1f, 0f, 0f),
                 Vector3f(0.1f, 0.5f, 0.05f))
@@ -286,6 +287,8 @@ class Scene(private val window: GameWindow) {
             Vector3f(0.1f, 0.5f, 0.05f))
         pointLight5 = PointLight(Vector3f(0f, 1f, 20f), Vector3f(1f, 1f, 0f),
             Vector3f(0.1f, 0.5f, 0.05f))
+
+        //Spotlights
 
         spotLight = SpotLight(Vector3f(0f, 1f, -2f), Vector3f(1f,1f,0.6f),
                 Vector3f(0.5f, 0.05f, 0.01f), Vector2f(toRadians(15f), toRadians(30f)))
@@ -318,16 +321,10 @@ class Scene(private val window: GameWindow) {
 
 
 
-
-
-
         blockLeft.setPosition(-11f, -50f,0f)
         blockRight.setPosition(11f, -50f,0f)
         curbLeft.setPosition(-8.5f, -50f,0f)
         curbRight.setPosition(8.5f, -50f,0f)
-
-
-
 
 
         ground.setPosition(0f,-50f,-0f)
@@ -342,10 +339,8 @@ class Scene(private val window: GameWindow) {
         skyboxShader.use()
 
 
-
-
-        skyboxShader.setUniform("view", camera.getCalculateViewMatrix(), false)
-        skyboxShader.setUniform("projection", camera.getCalculateProjectionMatrix(), false)
+        skyboxShader.setUniform("view", activeCamera.getCalculateViewMatrix(), false)
+        skyboxShader.setUniform("projection", activeCamera.getCalculateProjectionMatrix(), false)
 
 
         GL30.glBindVertexArray(cubeMap.skyboxVAO)
@@ -355,7 +350,6 @@ class Scene(private val window: GameWindow) {
 
         GL30.glBindVertexArray(0);
         glDepthFunc(GL_LESS);
-
 
 
         shaderInUse.use()
@@ -368,7 +362,7 @@ class Scene(private val window: GameWindow) {
 
         staticShader.setUniform("farbe", Vector3f(1f,1f,1f))
 
-        camera.bind(shaderInUse)
+        activeCamera.bind(shaderInUse)
 
         wheel.render(shaderInUse)
         cycle.render(shaderInUse)
@@ -378,17 +372,6 @@ class Scene(private val window: GameWindow) {
         for(ground in grounds){
             this.ground.render(shaderInUse)
         }
-
-
-
-
-
-
-
-
-
-
-
 
         shaderInUse.setUniform("farbe", Vector3f(0.3f,0.3f,0.3f))
 
@@ -411,13 +394,7 @@ class Scene(private val window: GameWindow) {
        // println("2 ${ground.getPosition().z()}")
       //  println(differenz)
 
-
-
-
-
     }
-
-
 
 
     fun update(dt: Float, t: Float) {
@@ -446,39 +423,14 @@ class Scene(private val window: GameWindow) {
         if (window.getKeyState(GLFW_KEY_3)) {
             shaderInUse = normalShader
         }
+        if (window.getKeyState(GLFW_KEY_4)) {
+            activeCamera = firstPersonCamera
+        }
+        if (window.getKeyState(GLFW_KEY_5)) {
+            activeCamera = camera
+        }
+
  }
-
-
-
-
-
- //       when {
- //           window.getKeyState(GLFW_KEY_W) -> {
- //               if (window.getKeyState(GLFW_KEY_A)) {
-//
- //                   cycle.rotateLocal(0f,1.5f * dt,0f)
-//
-//
- //               }
- //               if (window.getKeyState(GLFW_KEY_D)) {
-//
- //                   cycle.rotateLocal(0f, 1.5f * -dt,0f)
-//
- //               }
- //               cycle.translateLocal(Vector3f(0f, 0f, 50 * -dt))
- //           }
- //           window.getKeyState(GLFW_KEY_S) -> {
- //               if (window.getKeyState(GLFW_KEY_A)) {
- //                   cycle.rotateLocal(0f,1.5f * dt,0f)
- //               }
- //               if (window.getKeyState(GLFW_KEY_D)) {
- //                   cycle.rotateLocal(0f, 1.5f * -dt,0f)
- //               }
- //               cycle.translateLocal(Vector3f(0f, 0f, 2f * dt))
- //           }
- //       }
-//
-
 
         fun spawnGround() {
             var newRing = ground
@@ -511,7 +463,7 @@ class Scene(private val window: GameWindow) {
        // oldMousePosY = ypos
 
         if(notFirstFrame) {
-            camera.rotateAroundPoint(0f, toRadians(deltaX.toFloat() * 0.05f), 0f, Vector3f(0f))
+            activeCamera.rotateAroundPoint(0f, toRadians(deltaX.toFloat() * 0.05f), 0f, Vector3f(0f))
             //camera.rotateAroundPoint(toRadians(deltaY.toFloat()*0.05f), 0f,0f,camera.getXAxis())
         }
 
