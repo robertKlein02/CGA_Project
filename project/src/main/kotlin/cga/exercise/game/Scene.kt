@@ -33,6 +33,7 @@ class Scene(private val window: GameWindow) {
     private val tronShader: ShaderProgram
     private val skyboxShader: ShaderProgram
     private val negativeShader: ShaderProgram
+    private val normalShader: ShaderProgram
 
     private var shaderInUse: ShaderProgram
 
@@ -47,11 +48,12 @@ class Scene(private val window: GameWindow) {
     val blockLeft: Renderable
     val blockRight:Renderable
     var cycle : Renderable
+    var wheel:Renderable
     val curbLeft:Renderable
     val curbRight:Renderable
 
 
-    var speed:Float=1f
+    var speed:Float=3f
     var zahl:Int=200
 
 
@@ -130,7 +132,7 @@ class Scene(private val window: GameWindow) {
         staticShader = ShaderProgram("assets/shaders/simple_vert.glsl", "assets/shaders/simple_frag.glsl")
         tronShader = ShaderProgram("assets/shaders/tron_vert.glsl", "assets/shaders/tron_frag.glsl")
         negativeShader = ShaderProgram("assets/shaders/tron_vert.glsl", "assets/shaders/negative_frag.glsl")
-
+        normalShader = ShaderProgram("assets/shaders/normal_vert.glsl", "assets/shaders/normal_frag.glsl")
         shaderInUse = tronShader
         //initial opengl state
 
@@ -250,9 +252,20 @@ class Scene(private val window: GameWindow) {
         cycle = ModelLoader.loadModel("assets/light Cycle/Car/SCI_FRS_13_HD.obj",
                 toRadians(0f), toRadians(180f), 0f)?: throw Exception("Renderable can't be NULL!")
 
+        wheel = ModelLoader.loadModel("assets/wheel.obj",
+            toRadians(0f), toRadians(180f), 0f)?: throw Exception("Renderable can't be NULL!")
+
         cycle.scaleLocal(Vector3f(0.09f))
+
+
         cycle.setPosition(0f,-50f,40f)
+        wheel.scaleLocal(Vector3f(0.2f))
+
         camera.parent = cycle
+        wheel.parent=cycle
+
+
+        wheel.setPosition(-3f,0f,0f)
 
 
 
@@ -344,6 +357,7 @@ class Scene(private val window: GameWindow) {
         glDepthFunc(GL_LESS);
 
 
+         wheel.rotateAroundPoint(toRadians(speed.toFloat()),0f,0f, Vector3f(-3f,0f,-5f))
 
         shaderInUse.use()
 
@@ -353,11 +367,11 @@ class Scene(private val window: GameWindow) {
         curbRight.render(shaderInUse)
         curbLeft.render(shaderInUse)
 
-        staticShader.setUniform("farbe", Vector3f(0f,1f,0f))
+        staticShader.setUniform("farbe", Vector3f(1f,1f,1f))
 
         camera.bind(shaderInUse)
 
-
+        wheel.render(shaderInUse)
         cycle.render(shaderInUse)
 
 
@@ -414,12 +428,12 @@ class Scene(private val window: GameWindow) {
      when {
          window.getKeyState(GLFW_KEY_A) -> {
              if (cycle.getPosition().x()>-7.1) {
-                 cycle.translateLocal(Vector3f(100 * -dt, 0f, 0f))
+                 cycle.translateLocal(Vector3f(speed*20 * -dt, 0f, 0f))
              }
          }
          window.getKeyState(GLFW_KEY_D) -> {
              if (cycle.getPosition().x()<7.1) {
-                 cycle.translateLocal(Vector3f(100 * dt, 0f, 0f))
+                 cycle.translateLocal(Vector3f(speed*20 * dt, 0f, 0f))
              }
          }
      }
@@ -429,6 +443,9 @@ class Scene(private val window: GameWindow) {
         }
         if (window.getKeyState(GLFW_KEY_2)) {
             shaderInUse = negativeShader
+        }
+        if (window.getKeyState(GLFW_KEY_3)) {
+            shaderInUse = normalShader
         }
  }
 

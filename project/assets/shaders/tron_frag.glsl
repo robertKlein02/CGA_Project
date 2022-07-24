@@ -201,7 +201,7 @@ void main() {
 
 
     //emissive
-     vec3 result = emitCol * farbe;
+     vec3 result = emitCol * farbe*1.5;
 
 
 

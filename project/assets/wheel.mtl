@@ -1,0 +1,67 @@
+newmtl black_st
+illum 7
+Kd 0.3098 0.3098 0.3098
+adobe_interior_color 1 1 1
+Ni 1.5
+adobe_density 0
+Tr 1
+d 0
+Ka 0 0 0
+Ke 0 0 0
+Pm 0
+adobe_translucence 0
+Pr 0.6
+Ns 16
+Ks 1 1 1
+adobe_glow 0
+
+newmtl st_grey
+illum 7
+Kd 0.7843 0.7843 0.7843
+adobe_interior_color 1 1 1
+Ni 1.5
+adobe_density 0
+Tr 1
+d 0
+Ka 0 0 0
+Ke 0 0 0
+Pm 0
+adobe_translucence 0
+Pr 0.6
+Ns 16
+Ks 1 1 1
+adobe_glow 0
+
+newmtl white_st
+illum 7
+Kd 0.9804 0.9412 0.9529
+adobe_interior_color 1 1 1
+Ni 1.5
+adobe_density 0
+Tr 1
+d 0
+Ka 0 0 0
+Ke 0 0 0
+Pm 0
+adobe_translucence 0
+Pr 0.6
+Ns 16
+Ks 1 1 1
+adobe_glow 0
+
+newmtl st_gold
+illum 7
+Kd 0.9451 0.7725 0.4078
+adobe_interior_color 1 1 1
+Ni 1.5
+adobe_density 0
+Tr 1
+d 0
+Ka 0 0 0
+Ke 0 0 0
+Pm 0
+adobe_translucence 0
+Pr 0.6
+Ns 16
+Ks 1 1 1
+adobe_glow 0
