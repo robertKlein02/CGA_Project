@@ -260,12 +260,12 @@ class Scene(private val window: GameWindow) {
 
         cycle.setPosition(0f,-50f,40f)
         wheel.scaleLocal(Vector3f(0.2f))
-
+        wheel.rotateLocal(0f, toRadians(0f),0f)
         camera.parent = cycle
         wheel.parent=cycle
 
 
-        wheel.setPosition(-3f,0f,0f)
+        wheel.setPosition(-3f,0f,-5f)
 
 
 
@@ -357,7 +357,6 @@ class Scene(private val window: GameWindow) {
         glDepthFunc(GL_LESS);
 
 
-         wheel.rotateAroundPoint(toRadians(speed.toFloat()),0f,0f, Vector3f(-3f,0f,-5f))
 
         shaderInUse.use()
 
@@ -391,7 +390,7 @@ class Scene(private val window: GameWindow) {
 
 
 
-        shaderInUse.setUniform("farbe", Vector3f(0.5f,0.5f,0.5f))
+        shaderInUse.setUniform("farbe", Vector3f(0.3f,0.3f,0.3f))
 
 
         ground.render(shaderInUse)
