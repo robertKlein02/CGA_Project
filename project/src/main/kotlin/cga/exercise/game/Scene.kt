@@ -177,7 +177,7 @@ class Scene(private val window: GameWindow) {
 
         val vertexAttributes = arrayOf(attrPos,attrTC, attrNorm)
 
-        val groundEmitTexture = Texture2D("assets/textures/ground_emit.png", true)
+        val groundEmitTexture = Texture2D("assets/textures/ground_emit2.jpg", true)
         val groundDiffTexture = Texture2D("assets/textures/ground_diff.png", true)
         val groundSpecTexture = Texture2D("assets/textures/ground_spec.png", true)
 
@@ -186,7 +186,7 @@ class Scene(private val window: GameWindow) {
         groundSpecTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
         val groundShininess = 60f
-        val groundTCMultiplier = Vector2f(15f,100f)
+        val groundTCMultiplier = Vector2f(4f,20f)
 
 
         val groundMaterial = Material(groundDiffTexture, groundEmitTexture, groundSpecTexture, groundShininess,
