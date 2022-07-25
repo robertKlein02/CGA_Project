@@ -23,12 +23,17 @@ import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.ARBFramebufferSRGB.GL_FRAMEBUFFER_SRGB
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL30
+import java.util.Random
 
 
 /**
  * Created by Fabian on 16.09.2017.
  */
 class Scene(private val window: GameWindow) {
+    var level:Int=1
+    var thisLevel:Int=1
+
+
     private val staticShader: ShaderProgram
     private val tronShader: ShaderProgram
     private val skyboxShader: ShaderProgram
@@ -40,17 +45,27 @@ class Scene(private val window: GameWindow) {
     private val meshListBlock = mutableListOf<Mesh>()
     private val meshListCurb = mutableListOf<Mesh>()
     private val meshListGround = mutableListOf<Mesh>()
+    private val meshListHindernis= mutableListOf<Mesh>()
 
     val bodenmatrix: Matrix4f = Matrix4f()
     val kugelMatrix: Matrix4f = Matrix4f()
-
     val ground: Renderable
     val blockLeft: Renderable
     val blockRight:Renderable
-    var cycle : Renderable
-    var wheel:Renderable
+    var car : Renderable
     val curbLeft:Renderable
     val curbRight:Renderable
+    val ambulance:Renderable
+    val hinderis:Renderable
+
+
+    lateinit var hindernis1:Renderable
+    lateinit var hindernis2:Renderable
+    lateinit var hindernis3:Renderable
+    lateinit var hindernis4:Renderable
+    lateinit var hindernis5:Renderable
+    lateinit var hindernis6:Renderable
+
 
 
     var speed:Float=3f
@@ -171,6 +186,9 @@ class Scene(private val window: GameWindow) {
         val objResGround : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/groundFinal.obj")
         val objMeshListGround : MutableList<OBJLoader.OBJMesh> = objResGround.objects[0].meshes
 
+        val objResHindernis : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/hindernis.obj")
+        val objMeshListHindernis : MutableList<OBJLoader.OBJMesh> = objResHindernis.objects[0].meshes
+
 
         val stride = 8 * 4
         val attrPos = VertexAttribute(3, GL_FLOAT, stride, 0)
@@ -179,7 +197,7 @@ class Scene(private val window: GameWindow) {
 
         val vertexAttributes = arrayOf(attrPos,attrTC, attrNorm)
 
-        val groundEmitTexture = Texture2D("assets/textures/ground_emit2.jpg", true)
+        val groundEmitTexture = Texture2D("assets/textures/str.png", true)
         val groundDiffTexture = Texture2D("assets/textures/ground_diff.png", true)
         val groundSpecTexture = Texture2D("assets/textures/ground_spec.png", true)
 
@@ -188,7 +206,8 @@ class Scene(private val window: GameWindow) {
         groundSpecTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
         val groundShininess = 60f
-        val groundTCMultiplier = Vector2f(4f,20f)
+        val groundTCMultiplier = Vector2f(2f,20f)
+        val groundTCMHindernuis= Vector2f(1f,1f)
 
 
         val groundMaterial = Material(groundDiffTexture, groundEmitTexture, groundSpecTexture, groundShininess,
@@ -214,6 +233,8 @@ class Scene(private val window: GameWindow) {
         val curbMaterial = Material(curbDiffTexture, curbEmitTexture, curbSpecTexture, curbShininess,
             curbTCMultiplier)
 
+        val hindernisMaterial = Material(groundSpecTexture, groundSpecTexture, groundSpecTexture, curbShininess,
+            groundTCMHindernuis)
 
 
         for (mesh in objMeshListCurb) {
@@ -229,6 +250,10 @@ class Scene(private val window: GameWindow) {
             meshListGround.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes, groundMaterial))
         }
 
+        for (mesh in objMeshListHindernis) {
+            meshListHindernis.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes, hindernisMaterial))
+        }
+
         bodenmatrix.scale(30f)
         bodenmatrix.rotateX(90f)
 
@@ -242,6 +267,7 @@ class Scene(private val window: GameWindow) {
 
         curbRight = Renderable(meshListCurb)
         curbLeft = Renderable(meshListCurb)
+        hinderis=Renderable(meshListHindernis)
 
 
 
@@ -253,26 +279,26 @@ class Scene(private val window: GameWindow) {
         firstPersonCamera.translateLocal(Vector3f(0f, 4.5f, 2.5f))
 
 
-        cycle = ModelLoader.loadModel("assets/light Cycle/Car/SCI_FRS_13_HD.obj",
+        car = ModelLoader.loadModel("assets/light Cycle/Car/SCI_FRS_13_HD.obj",
                 toRadians(0f), toRadians(180f), 0f)?: throw Exception("Renderable can't be NULL!")
 
-        wheel = ModelLoader.loadModel("assets/wheel.obj",
-            toRadians(0f), toRadians(180f), 0f)?: throw Exception("Renderable can't be NULL!")
+        ambulance = ModelLoader.loadModel("assets/light Cycle/Light Cycle/HQ_Movie cycle.obj",
+            toRadians(-90f), toRadians(270f), 0f)?: throw Exception("Renderable can't be NULL!")
 
-        cycle.scaleLocal(Vector3f(0.09f))
+        car.scaleLocal(Vector3f(0.09f))
+        ambulance.scaleLocal(Vector3f(0.4f))
 
 
-        cycle.setPosition(0f,-50f,40f)
-        wheel.scaleLocal(Vector3f(0.2f))
-        wheel.rotateLocal(0f, toRadians(0f),0f)
+        car.setPosition(0f,-50f,40f)
+
 
         // Kamera parents definieren
-        camera.parent = cycle
-        firstPersonCamera.parent = cycle
+        camera.parent = car
+        firstPersonCamera.parent = car
 
         // Felgen Versuch
-        wheel.parent=cycle
-        wheel.setPosition(-3f,0f,-5f)
+
+
 
 
         // Pointlights
@@ -316,8 +342,8 @@ class Scene(private val window: GameWindow) {
         spotLight5.rotateLocal(toRadians(85f), toRadians(0f),toRadians(0f))
 
 
-        spotLight.parent = cycle
-        spotLight5.parent= cycle
+        spotLight.parent = car
+        spotLight5.parent= car
 
 
 
@@ -327,11 +353,16 @@ class Scene(private val window: GameWindow) {
         curbRight.setPosition(8.5f, -50f,0f)
 
 
+
+        ambulance.setPosition(0f,-50f,-10f)
+
+
         ground.setPosition(0f,-50f,-0f)
     }
 
     fun render(dt: Float, t: Float) {
-       //println(cycle.getPosition())
+
+       println(thisLevel)
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         // -----------------------rendering Skybox----------------------------
@@ -354,7 +385,7 @@ class Scene(private val window: GameWindow) {
 
         shaderInUse.use()
 
-
+        spawnHindernis()
         blockLeft.render(shaderInUse)
         blockRight.render(shaderInUse)
         curbRight.render(shaderInUse)
@@ -364,8 +395,16 @@ class Scene(private val window: GameWindow) {
 
         activeCamera.bind(shaderInUse)
 
-        wheel.render(shaderInUse)
-        cycle.render(shaderInUse)
+
+        car.render(shaderInUse)
+        ambulance.render(shaderInUse)
+
+        hindernis1.render(shaderInUse)
+        hindernis2.render(shaderInUse)
+        hindernis3.render(shaderInUse)
+        hindernis4.render(shaderInUse)
+        hindernis5.render(shaderInUse)
+        hindernis6.render(shaderInUse)
 
 
 
@@ -377,17 +416,18 @@ class Scene(private val window: GameWindow) {
 
 
         ground.render(shaderInUse)
-        var differenz= ground.getPosition().z() -cycle.getPosition().z()
+        var differenz= ground.getPosition().z() -car.getPosition().z()
 
 
 
         if (differenz>= (ground.getWorldZAxis().z()+45f)) {
-            ground.setPosition(ground.getPosition().x(), ground.getPosition().y(), cycle.getPosition().z()-45f)
+            ground.setPosition(ground.getPosition().x(), ground.getPosition().y(), car.getPosition().z()-45f)
             blockLeft.setPosition(blockLeft.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
             blockRight.setPosition(blockRight.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
             curbLeft.setPosition(curbLeft.getPosition().x(), curbLeft.getPosition().y(), ground.getPosition().z())
             curbRight.setPosition(curbRight.getPosition().x(), curbRight.getPosition().y(), ground.getPosition().z())
             speed+=1
+            thisLevel+=1
 
         }
         //println("1 ${cycle.getPosition().z()}")
@@ -399,17 +439,25 @@ class Scene(private val window: GameWindow) {
 
     fun update(dt: Float, t: Float) {
 
-     cycle.translateGlobal(Vector3f(0f, 0f, speed * -dt))
+        car.translateGlobal(Vector3f(0f, 0f, speed * -dt))
 
      when {
          window.getKeyState(GLFW_KEY_A) -> {
-             if (cycle.getPosition().x()>-7.1) {
-                 cycle.translateLocal(Vector3f(speed*20 * -dt, 0f, 0f))
+             if (car.getPosition().x()>-7.1) {
+                 car.translateLocal(Vector3f(speed*20 * -dt, 0f, 0f))
+
+                 if(car.getPosition().x()<-7.1){                                                  // Bei schnelleren geschw. auto ansonsten in curb oder haus
+                     car.setPosition(-7.1f,car.getPosition().y(),car.getPosition().z())
+                 }
              }
          }
          window.getKeyState(GLFW_KEY_D) -> {
-             if (cycle.getPosition().x()<7.1) {
-                 cycle.translateLocal(Vector3f(speed*20 * dt, 0f, 0f))
+             if (car.getPosition().x()<7.1) {
+                 car.translateLocal(Vector3f(speed*20 * dt, 0f, 0f))
+
+                 if(car.getPosition().x()>7.1){                                                  // Bei schnelleren geschw. auto ansonsten in curb oder haus
+                     car.setPosition(7.1f,car.getPosition().y(),car.getPosition().z())
+                 }
              }
          }
      }
@@ -443,7 +491,7 @@ class Scene(private val window: GameWindow) {
                     Vector3f(
                         0f,
                         0f,
-                        cycle.getPosition().z()
+                        car.getPosition().z()
                     )
                 )
 
@@ -453,6 +501,53 @@ class Scene(private val window: GameWindow) {
         }
 
     fun onKey(key: Int, scancode: Int, action: Int, mode: Int) {}
+
+
+
+    fun spawnHindernis(){
+        if (level==thisLevel){
+            level+=1
+
+
+            hindernis1=Renderable(meshListHindernis)
+
+            hindernis2=Renderable(meshListHindernis)
+
+            hindernis3=Renderable(meshListHindernis)
+
+            hindernis4=Renderable(meshListHindernis)
+
+            hindernis5=Renderable(meshListHindernis)
+
+            hindernis6=Renderable(meshListHindernis)
+
+
+            println("wassssssssssssss")
+
+            hindernis1.setPosition(spurHindernisZufall(),-50f,car.getPosition().z()-20)
+            hindernis2.setPosition(spurHindernisZufall(),-50f,car.getPosition().z()-35)
+            hindernis3.setPosition(spurHindernisZufall(),-50f,car.getPosition().z()-50)
+            hindernis4.setPosition(spurHindernisZufall(),-50f,car.getPosition().z()-65)
+            hindernis5.setPosition(spurHindernisZufall(),-50f,car.getPosition().z()-80)
+            hindernis6.setPosition(spurHindernisZufall(),-50f,-car.getPosition().z()-95)
+
+
+        }
+
+    }
+
+    fun spurHindernisZufall():Float{
+
+       var random = kotlin.random.Random.nextInt(0,8)
+        if(random==1)return -1.17f
+        if(random==2)return -2.925f
+        if(random==3)return -4.59f
+        if(random==4)return -6.5f
+        if(random==5)return 1.17f
+        if(random==6)return 2.925f
+        if(random==7)return 4.59f
+        else return 6.5f
+    }
 
     fun onMouseMove(xpos: Double, ypos: Double) {
 
