@@ -75,11 +75,11 @@ class Scene(private val window: GameWindow) {
     val firstPersonCamera = TronCamera()
     private var activeCamera = camera
 
-    val pointLight : PointLight
-    val pointLight2 : PointLight
-    val pointLight3 : PointLight
-    val pointLight4 : PointLight
-    val pointLight5 : PointLight
+    lateinit var pointLight : PointLight
+    lateinit var pointLight2 : PointLight
+    lateinit var pointLight3 : PointLight
+    lateinit var pointLight4 : PointLight
+    lateinit var pointLight5 : PointLight
 
     val spotLight: SpotLight
     val spotLight1: SpotLight
@@ -285,17 +285,6 @@ class Scene(private val window: GameWindow) {
 
 
         //---------------------------------------Licht------------------------------------------
-        // Pointlights
-        pointLight = PointLight(Vector3f(0f, 1f, 0f), Vector3f(1f, 0f, 0f),
-                Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight2 = PointLight(Vector3f(0f, 1f, -10f), Vector3f(0f, 1f, 0f),
-            Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight3 = PointLight(Vector3f(0f, 1f, -20f), Vector3f(0f, 0f, 1f),
-            Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight4 = PointLight(Vector3f(0f, 1f, 10f), Vector3f(0f, 1f, 1f),
-            Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight5 = PointLight(Vector3f(0f, 1f, 20f), Vector3f(1f, 1f, 0f),
-            Vector3f(0.1f, 0.5f, 0.05f))
 
         //Spotlights
         spotLight = SpotLight(Vector3f(0f, 1f, -2f), Vector3f(1f,1f,0.6f),
@@ -398,18 +387,23 @@ class Scene(private val window: GameWindow) {
         hindernis5.render(shaderInUse)
 
         star1.render(shaderInUse)
+        pointLight.bind(shaderInUse,"point")
         star1.rotateLocal(0f,star1.getPosition().y() *0.2f*dt,0f)
 
         star2.render(shaderInUse)
+        pointLight2.bind(shaderInUse,"point2")
         star2.rotateLocal(0f,star2.getPosition().y() *0.2f*dt,0f)
 
         star3.render(shaderInUse)
+        pointLight3.bind(shaderInUse,"point3")
         star3.rotateLocal(0f,star3.getPosition().y() *0.2f*dt,0f)
 
         star4.render(shaderInUse)
+        pointLight4.bind(shaderInUse,"point4")
         star4.rotateLocal(0f,star4.getPosition().y() *0.2f*dt,0f)
 
         star5.render(shaderInUse)
+        pointLight5.bind(shaderInUse,"point5")
         star5.rotateLocal(0f,star5.getPosition().y() *0.2f*dt,0f)
 
 
@@ -531,6 +525,17 @@ class Scene(private val window: GameWindow) {
         star4.setPosition(spurZufall(),-49.2f,car.getPosition().z()-72)
         star5.setPosition(spurZufall(),-49.2f,car.getPosition().z()-7)
 
+        // Pointlights
+        pointLight = PointLight(Vector3f(star1.getPosition().x(), star1.getPosition().y(), star1.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
+        pointLight2 = PointLight(Vector3f(star2.getPosition().x(), star2.getPosition().y(), star2.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
+        pointLight3 = PointLight(Vector3f(star3.getPosition().x(), star3.getPosition().y(), star3.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
+        pointLight4 = PointLight(Vector3f(star4.getPosition().x(), star4.getPosition().y(), star4.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
+        pointLight5 = PointLight(Vector3f(star5.getPosition().x(), star5.getPosition().y(), star5.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
 
     }
 
