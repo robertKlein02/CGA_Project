@@ -30,16 +30,12 @@ import java.util.Random
  * Created by Fabian on 16.09.2017.
  */
 class Scene(private val window: GameWindow) {
-    var level:Int=1
-    var thisLevel:Int=1
-
 
     private val staticShader: ShaderProgram
     private val tronShader: ShaderProgram
     private val skyboxShader: ShaderProgram
     private val negativeShader: ShaderProgram
     private val normalShader: ShaderProgram
-
     private var shaderInUse: ShaderProgram
 
     private val meshListBlock = mutableListOf<Mesh>()
@@ -49,6 +45,7 @@ class Scene(private val window: GameWindow) {
 
     val bodenmatrix: Matrix4f = Matrix4f()
     val kugelMatrix: Matrix4f = Matrix4f()
+
     val ground: Renderable
     val blockLeft: Renderable
     val blockRight:Renderable
@@ -56,7 +53,7 @@ class Scene(private val window: GameWindow) {
     val curbLeft:Renderable
     val curbRight:Renderable
     val ambulance:Renderable
-    val hinderis:Renderable
+
 
 
     lateinit var hindernis1:Renderable
@@ -68,14 +65,11 @@ class Scene(private val window: GameWindow) {
 
 
 
-    var speed:Float=3f
-    var zahl:Int=200
+    var speed:Float=10f
+    var level:Int=1
+    var thisLevel:Int=1
 
 
-
-
-    private val grounds = ArrayList<Renderable?>()
-    private var groundZPos = 0f
 
 
     val camera = TronCamera()
@@ -267,7 +261,7 @@ class Scene(private val window: GameWindow) {
 
         curbRight = Renderable(meshListCurb)
         curbLeft = Renderable(meshListCurb)
-        hinderis=Renderable(meshListHindernis)
+
 
 
 
@@ -397,20 +391,16 @@ class Scene(private val window: GameWindow) {
 
 
         car.render(shaderInUse)
-        ambulance.render(shaderInUse)
+
 
         hindernis1.render(shaderInUse)
         hindernis2.render(shaderInUse)
         hindernis3.render(shaderInUse)
         hindernis4.render(shaderInUse)
         hindernis5.render(shaderInUse)
-        hindernis6.render(shaderInUse)
 
 
 
-        for(ground in grounds){
-            this.ground.render(shaderInUse)
-        }
 
         shaderInUse.setUniform("farbe", Vector3f(0.3f,0.3f,0.3f))
 
@@ -444,7 +434,7 @@ class Scene(private val window: GameWindow) {
      when {
          window.getKeyState(GLFW_KEY_A) -> {
              if (car.getPosition().x()>-7.1) {
-                 car.translateLocal(Vector3f(speed*20 * -dt, 0f, 0f))
+                 car.translateLocal(Vector3f(speed*10 * -dt, 0f, 0f))
 
                  if(car.getPosition().x()<-7.1){                                                  // Bei schnelleren geschw. auto ansonsten in curb oder haus
                      car.setPosition(-7.1f,car.getPosition().y(),car.getPosition().z())
@@ -453,7 +443,7 @@ class Scene(private val window: GameWindow) {
          }
          window.getKeyState(GLFW_KEY_D) -> {
              if (car.getPosition().x()<7.1) {
-                 car.translateLocal(Vector3f(speed*20 * dt, 0f, 0f))
+                 car.translateLocal(Vector3f(speed*10 * dt, 0f, 0f))
 
                  if(car.getPosition().x()>7.1){                                                  // Bei schnelleren geschw. auto ansonsten in curb oder haus
                      car.setPosition(7.1f,car.getPosition().y(),car.getPosition().z())
@@ -480,25 +470,6 @@ class Scene(private val window: GameWindow) {
 
  }
 
-        fun spawnGround() {
-            var newRing = ground
-
-
-
-
-                grounds.add(newRing)
-                grounds[grounds.size - 1]?.translateLocal(
-                    Vector3f(
-                        0f,
-                        0f,
-                        car.getPosition().z()
-                    )
-                )
-
-
-
-
-        }
 
     fun onKey(key: Int, scancode: Int, action: Int, mode: Int) {}
 
@@ -539,13 +510,13 @@ class Scene(private val window: GameWindow) {
     fun spurHindernisZufall():Float{
 
        var random = kotlin.random.Random.nextInt(0,8)
-        if(random==1)return -1.17f
-        if(random==2)return -2.925f
-        if(random==3)return -4.59f
-        if(random==4)return -6.5f
-        if(random==5)return 1.17f
-        if(random==6)return 2.925f
-        if(random==7)return 4.59f
+        if(random==0)return -1.17f
+        if(random==1)return -2.925f
+        if(random==2)return -4.59f
+        if(random==3)return -6.5f
+        if(random==4)return 1.17f
+        if(random==5)return 2.925f
+        if(random==6)return 4.59f
         else return 6.5f
     }
 
