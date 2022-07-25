@@ -44,7 +44,7 @@ class Scene(private val window: GameWindow) {
     private val meshListHindernis= mutableListOf<Mesh>()
 
 
-    var speed:Float=10f
+    var speed:Float=5f
     var level:Int=1
     var thisLevel:Int=1
 
@@ -185,8 +185,8 @@ class Scene(private val window: GameWindow) {
         val objMeshListHindernis : MutableList<OBJLoader.OBJMesh> = objResHindernis.objects[0].meshes
 
         val groundEmitTexture = Texture2D("assets/textures/str.png", true)
-        val groundDiffTexture = Texture2D("assets/textures/ground_diff.png", true)
-        val groundSpecTexture = Texture2D("assets/textures/ground_spec.png", true)
+        val groundDiffTexture = Texture2D("assets/textures/ground_diff.jpg", true)
+        val groundSpecTexture = Texture2D("assets/textures/ground_spec.jpg", true)
 
         val blockEmitTexture = Texture2D("assets/models/block/Standardmaterial_baseColor.jpg", true)
         val blockDiffTexture = Texture2D("assets/models/block/Standardmaterial_baseColor.jpg", true)
