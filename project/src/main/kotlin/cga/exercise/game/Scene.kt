@@ -52,7 +52,7 @@ class Scene(private val window: GameWindow) {
     val curbLeft:Renderable
     val curbRight:Renderable
 
-
+// Autostart Geschwindigkeit
     var speed:Float=3f
     var zahl:Int=200
 
@@ -244,12 +244,12 @@ class Scene(private val window: GameWindow) {
         curbLeft = Renderable(meshListCurb)
 
 
-
-        camera.rotateLocal(Math.toRadians(-20f),0f, 0f)
+        //Standard camera Position
+        camera.rotateLocal(toRadians(-20f),0f, 0f)
         camera.translateLocal(Vector3f(0f, 0f, 20f))
 
-        //firstperson Camera
-        firstPersonCamera.rotateLocal(Math.toRadians(-10f),0f, 0f)
+        //firstperson Camera Position
+        firstPersonCamera.rotateLocal(toRadians(-10f),0f, 0f)
         firstPersonCamera.translateLocal(Vector3f(0f, 4.5f, 2.5f))
 
 
@@ -319,7 +319,7 @@ class Scene(private val window: GameWindow) {
         spotLight.parent = cycle
         spotLight5.parent= cycle
 
-
+// Fahrbahnbegrenzung und Häuser positionieren
 
         blockLeft.setPosition(-11f, -50f,0f)
         blockRight.setPosition(11f, -50f,0f)
@@ -331,7 +331,6 @@ class Scene(private val window: GameWindow) {
     }
 
     fun render(dt: Float, t: Float) {
-       //println(cycle.getPosition())
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         // -----------------------rendering Skybox----------------------------
