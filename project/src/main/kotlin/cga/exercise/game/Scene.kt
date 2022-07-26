@@ -21,6 +21,7 @@ import org.joml.Vector2f
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.ARBFramebufferSRGB.GL_FRAMEBUFFER_SRGB
+import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL30
 import java.util.Random
@@ -42,6 +43,7 @@ class Scene(private val window: GameWindow) {
     private val meshListCurb = mutableListOf<Mesh>()
     private val meshListGround = mutableListOf<Mesh>()
     private val meshListHindernis= mutableListOf<Mesh>()
+    private val meshListStar= mutableListOf<Mesh>()
 
 
     var speed:Float=5f
@@ -54,7 +56,7 @@ class Scene(private val window: GameWindow) {
     var car : Renderable
     val curbLeft:Renderable
     val curbRight:Renderable
-    val star:Renderable
+
 
 
     lateinit var hindernis1:Renderable
@@ -183,6 +185,9 @@ class Scene(private val window: GameWindow) {
         val objResHindernis : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/hindernis.obj")
         val objMeshListHindernis : MutableList<OBJLoader.OBJMesh> = objResHindernis.objects[0].meshes
 
+        val resStar: OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/Star.obj")
+        val objStar: MutableList<OBJLoader.OBJMesh> = resStar.objects[0].meshes
+
         val groundEmitTexture = Texture2D("assets/textures/str.png", true)
         val groundDiffTexture = Texture2D("assets/textures/ground_diff.png", true)
         val groundSpecTexture = Texture2D("assets/textures/ground_spec.jpg", true)
@@ -195,6 +200,11 @@ class Scene(private val window: GameWindow) {
         val curbDiffTexture = Texture2D("assets/textures/ground_diff.png", true)
         val curbSpecTexture = Texture2D("assets/textures/ground_diff.png", true)
 
+        val starEmit = Texture2D("assets/textures/StarColor3.png", true)
+        val starDiff = Texture2D("assets/textures/StarColor3.png", true)
+        val starSpec = Texture2D("assets/textures/StarColor3.png", true)
+
+
         val stride = 8 * 4
         val attrPos = VertexAttribute(3, GL_FLOAT, stride, 0)
         val attrTC = VertexAttribute(2, GL_FLOAT, stride, 3 * 4)
@@ -204,6 +214,10 @@ class Scene(private val window: GameWindow) {
         groundEmitTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
         groundDiffTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
         groundSpecTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+
+        starEmit.setTexParams(GL_REPEAT, GL_REPEAT, GL11.GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+        starDiff.setTexParams(GL_REPEAT, GL_REPEAT, GL11.GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+        starSpec.setTexParams(GL_REPEAT, GL_REPEAT, GL11.GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
         val groundShininess = 60f
         val groundTCMultiplier = Vector2f(2f,20f)
@@ -230,6 +244,8 @@ class Scene(private val window: GameWindow) {
         val hindernisMaterial = Material(groundDiffTexture, groundDiffTexture, groundSpecTexture, curbShininess,
             groundTCMHindernuis)
 
+        val starMaterial = Material(starDiff, starEmit, starSpec, 40.0f, Vector2f(1.0f))
+
 
 
         for (mesh in objMeshListCurb) {
@@ -249,12 +265,17 @@ class Scene(private val window: GameWindow) {
             meshListHindernis.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes, hindernisMaterial))
         }
 
+        for (mesh in objStar) {
+            meshListStar.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes, starMaterial))
+        }
+
 
         ground = Renderable(meshListGround)
         blockLeft = Renderable(meshListBlock)
         blockRight = Renderable(meshListBlock)
         curbRight = Renderable(meshListCurb)
         curbLeft = Renderable(meshListCurb)
+
 
         //---------------------------------------Camera------------------------------------------
 
@@ -272,8 +293,6 @@ class Scene(private val window: GameWindow) {
         car = ModelLoader.loadModel("assets/light Cycle/Car/SCI_FRS_13_HD.obj",
                 toRadians(0f), toRadians(180f), 0f)?: throw Exception("Renderable can't be NULL!")
 
-        star = ModelLoader.loadModel("assets/star.obj",
-            toRadians(-90f), toRadians(270f), 0f)?: throw Exception("Renderable can't be NULL!")
 
 
 
@@ -284,7 +303,6 @@ class Scene(private val window: GameWindow) {
         //---------------------------------------Rotieren------------------------------------------
 
 
-        star.rotateLocal(9.2f, 0.9f, 0.0f)
 
 
 
@@ -292,7 +310,7 @@ class Scene(private val window: GameWindow) {
         //---------------------------------------Scalieren------------------------------------------
 
         car.scaleLocal(Vector3f(0.09f))
-        star.scaleLocal(Vector3f(1f))
+
 
         //---------------------------------------Parent------------------------------------------
 
@@ -306,13 +324,12 @@ class Scene(private val window: GameWindow) {
         blockRight.setPosition(11f, -50f,0f)
         curbLeft.setPosition(-8.5f, -50f,0f)
         curbRight.setPosition(8.5f, -50f,0f)
-        star.setPosition(0f,-49.2f,10f)
+
         ground.setPosition(0f,-50f,-0f)
     }
 
     fun render(dt: Float, t: Float) {
 
-       println(thisLevel)
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         // -----------------------rendering Skybox----------------------------
@@ -335,28 +352,25 @@ class Scene(private val window: GameWindow) {
         spawnHindernis()
         shaderInUse.use()
         activeCamera.bind(shaderInUse)
-        shaderInUse.setUniform("farbe",Vector3f(0.3f,0.3f,0.3f))
+        shaderInUse.setUniform("farbe",Vector3f(0.5f,0.5f,0.5f))
 
+        pointLight.bind(shaderInUse,"point")
+        pointLight2.bind(shaderInUse,"point2")
+        pointLight3.bind(shaderInUse,"point3")
+        pointLight4.bind(shaderInUse,"point4")
+        pointLight5.bind(shaderInUse,"point5")
 
         star1.render(shaderInUse)
-        pointLight.bind(shaderInUse,"point")
-        star1.rotateLocal(0f,star1.getPosition().y() *0.2f*dt,0f)
-
         star2.render(shaderInUse)
-        pointLight2.bind(shaderInUse,"point2")
-        star2.rotateLocal(0f,star2.getPosition().y() *0.2f*dt,0f)
-
         star3.render(shaderInUse)
-        pointLight3.bind(shaderInUse,"point3")
-        star3.rotateLocal(0f,star3.getPosition().y() *0.2f*dt,0f)
-
         star4.render(shaderInUse)
-        pointLight4.bind(shaderInUse,"point4")
-        star4.rotateLocal(0f,star4.getPosition().y() *0.2f*dt,0f)
-
         star5.render(shaderInUse)
-        pointLight5.bind(shaderInUse,"point5")
-        star5.rotateLocal(0f,star5.getPosition().y() *0.2f*dt,0f)
+
+        star1.rotateLocal(0f,0f,star1.getPosition().y() *0.05f*dt)
+        star2.rotateLocal(0f,0f,star2.getPosition().y() *0.05f*dt)
+        star3.rotateLocal(0f,0f,star3.getPosition().y() *0.05f*dt)
+        star4.rotateLocal(0f,0f,star4.getPosition().y() *0.05f*dt)
+        star5.rotateLocal(0f,0f,star5.getPosition().y() *0.05f*dt)
 
 
         hindernis1.render(shaderInUse)
@@ -392,6 +406,8 @@ class Scene(private val window: GameWindow) {
 
 
         if (differenz>= (ground.getWorldZAxis().z()+45f)) {
+
+
             ground.setPosition(ground.getPosition().x(), ground.getPosition().y(), car.getPosition().z()-45f)
             blockLeft.setPosition(blockLeft.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
             blockRight.setPosition(blockRight.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
@@ -510,23 +526,31 @@ class Scene(private val window: GameWindow) {
 
     fun spwanStar(){
 
-        star1=ModelLoader.loadModel("assets/star.obj",
-            1f, 0f, 0.3f)?: throw Exception("Renderable can't be NULL!")
-        star2=ModelLoader.loadModel("assets/star.obj",
-            1f, 0f, 0.3f)?: throw Exception("Renderable can't be NULL!")
-        star3=ModelLoader.loadModel("assets/star.obj",
-            1f, 0f, 0.3f)?: throw Exception("Renderable can't be NULL!")
-        star4=ModelLoader.loadModel("assets/star.obj",
-            1f, 0f, 0.3f)?: throw Exception("Renderable can't be NULL!")
-        star5=ModelLoader.loadModel("assets/star.obj",
-            1f, 0f, 0.3f)?: throw Exception("Renderable can't be NULL!")
+        star1= Renderable(meshListStar)
+        star2=Renderable(meshListStar)
+        star3=Renderable(meshListStar)
+        star4=Renderable(meshListStar)
+        star5=Renderable(meshListStar)
+
+        star1.rotateLocal(1.9f, 0f, 0.0f)
+        star2.rotateLocal(1.9f, 0f, 0.0f)
+        star3.rotateLocal(1.9f, 0f, 0.0f)
+        star4.rotateLocal(1.9f, 0f, 0.0f)
+        star5.rotateLocal(1.9f, 0f, 0.0f)
+
+        star1.scaleLocal(Vector3f(0.5f))
+        star2.scaleLocal(Vector3f(0.5f))
+        star3.scaleLocal(Vector3f(0.5f))
+        star4.scaleLocal(Vector3f(0.5f))
+        star5.scaleLocal(Vector3f(0.5f))
 
 
-        star1.setPosition(spurZufall(),-49.2f,car.getPosition().z()-27)
-        star2.setPosition(spurZufall(),-49.2f,car.getPosition().z()-42)
-        star3.setPosition(spurZufall(),-49.2f,car.getPosition().z()-57)
-        star4.setPosition(spurZufall(),-49.2f,car.getPosition().z()-72)
-        star5.setPosition(spurZufall(),-49.2f,car.getPosition().z()-7)
+
+        star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
+        star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
+        star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
+        star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
+        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-7)
 
         // Pointlights
         pointLight = PointLight(Vector3f(star1.getPosition().x(), star1.getPosition().y(), star1.getPosition().z()), Vector3f(1f, 1f, 1f),

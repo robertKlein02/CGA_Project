@@ -50,9 +50,6 @@ void main(){
     vec4 modelViewPosition = modelview * vec4(position, 1.0f);
     vec4 pos = projection * modelViewPosition;
     vec4 norm = transpose(inverse(modelview)) * vec4(normals, 0.0f);
-    gl_Position = pos;
-    vertexData.normale = norm.xyz;
-    vertexData.tc =  texCoord * tcMultiplier;
 
     //POINT
     vec4 lp = view * vec4(pointLightPos, 1.0);
@@ -91,4 +88,7 @@ void main(){
     vertexData.toSpot5Light = (lp25 - modelViewPosition).xyz;
 
     vertexData.toCamera = -modelViewPosition.xyz;
+    gl_Position = pos;
+    vertexData.normale = norm.xyz;
+    vertexData.tc =  texCoord * tcMultiplier;
 }
