@@ -81,7 +81,7 @@ class Scene(private val window: GameWindow) {
     lateinit var pointLight4 : PointLight
     lateinit var pointLight5 : PointLight
 
-    lateinit var spotLight1: SpotLight
+    lateinit var spotLight: SpotLight
     lateinit var spotLight2: SpotLight
     lateinit var spotLight3: SpotLight
     lateinit var spotLight4: SpotLight
@@ -184,7 +184,7 @@ class Scene(private val window: GameWindow) {
         val objMeshListHindernis : MutableList<OBJLoader.OBJMesh> = objResHindernis.objects[0].meshes
 
         val groundEmitTexture = Texture2D("assets/textures/str.png", true)
-        val groundDiffTexture = Texture2D("assets/textures/ground_diff.jpg", true)
+        val groundDiffTexture = Texture2D("assets/textures/ground_diff.png", true)
         val groundSpecTexture = Texture2D("assets/textures/ground_spec.jpg", true)
 
         val blockEmitTexture = Texture2D("assets/models/block/Standardmaterial_baseColor.jpg", true)
@@ -332,25 +332,10 @@ class Scene(private val window: GameWindow) {
         GL30.glBindVertexArray(0);
         glDepthFunc(GL_LESS);
 
-
-        shaderInUse.use()
-
         spawnHindernis()
-        blockLeft.render(shaderInUse)
-        blockRight.render(shaderInUse)
-        curbRight.render(shaderInUse)
-        curbLeft.render(shaderInUse)
-
-
+        shaderInUse.use()
         activeCamera.bind(shaderInUse)
-
-
-        car.render(shaderInUse)
-
-
-
         shaderInUse.setUniform("farbe",Vector3f(0.3f,0.3f,0.3f))
-
 
 
         star1.render(shaderInUse)
@@ -375,15 +360,28 @@ class Scene(private val window: GameWindow) {
 
 
         hindernis1.render(shaderInUse)
-        spotLight1.bind(staticShader,"spot1", activeCamera.getCalculateViewMatrix())
+        spotLight.bind(shaderInUse,"spot", activeCamera.getCalculateViewMatrix())
         hindernis2.render(shaderInUse)
-        spotLight1.bind(staticShader,"spot2", activeCamera.getCalculateViewMatrix())
+        spotLight2.bind(shaderInUse,"spot2", activeCamera.getCalculateViewMatrix())
         hindernis3.render(shaderInUse)
-        spotLight1.bind(staticShader,"spot3", activeCamera.getCalculateViewMatrix())
+        spotLight3.bind(shaderInUse,"spot3", activeCamera.getCalculateViewMatrix())
         hindernis4.render(shaderInUse)
-        spotLight1.bind(staticShader,"spot4", activeCamera.getCalculateViewMatrix())
+        spotLight4.bind(shaderInUse,"spot4", activeCamera.getCalculateViewMatrix())
         hindernis5.render(shaderInUse)
-        spotLight1.bind(staticShader,"spot5", activeCamera.getCalculateViewMatrix())
+        spotLight5.bind(shaderInUse,"spot5", activeCamera.getCalculateViewMatrix())
+
+        shaderInUse.setUniform("farbe", Vector3f(0.4f,0.4f,0.4f))
+
+
+
+        blockLeft.render(shaderInUse)
+        blockRight.render(shaderInUse)
+        curbRight.render(shaderInUse)
+        curbLeft.render(shaderInUse)
+        car.render(shaderInUse)
+
+        shaderInUse.setUniform("farbe", Vector3f(0.5f))
+
 
 
 
@@ -481,20 +479,27 @@ class Scene(private val window: GameWindow) {
 
 
 
-            spotLight1 = SpotLight(Vector3f(hindernis1.getPosition().x(), 0f, hindernis1.getPosition().z()+1), Vector3f(1f,1f,1f),
-                Vector3f(1f, 0.05f, 0.01f),Vector2f(toRadians(0f), toRadians(180f)))
+            spotLight = SpotLight(Vector3f(0f, 0f, -2f), Vector3f(1f,1f,1f),
+                Vector3f(0.5f, 0.05f, 0.01f),Vector2f(toRadians(15f), toRadians(30f)))
 
-            spotLight2 = SpotLight(Vector3f(hindernis2.getPosition().x(), -49f, hindernis2.getPosition().z()+1), Vector3f(1f,1f,1f),
+            spotLight2 = SpotLight(Vector3f(0f, 0f, -2f), Vector3f(1f,1f,1f),
+                Vector3f(0.5f, 0.05f, 0.01f),Vector2f(toRadians(15f), toRadians(30f)))
+
+            spotLight3 = SpotLight(Vector3f(hindernis3.getPosition().x(), hindernis3.getPosition().y()+3, hindernis3.getPosition().z()+2), Vector3f(1f,1f,1f),
                 Vector3f(1f, 0.05f, 0.01f), Vector2f(toRadians(0f), toRadians(180f)))
 
-            spotLight3 = SpotLight(Vector3f(hindernis3.getPosition().x(), -49f, hindernis3.getPosition().z()+1), Vector3f(1f,1f,1f),
-                Vector3f(1f, 0.05f, 0.01f), Vector2f(toRadians(0f), toRadians(180f)))
-
-            spotLight4 = SpotLight(Vector3f(hindernis4.getPosition().x(), -49f, hindernis4.getPosition().z()+1), Vector3f(1f,1f,1f),
+            spotLight4 = SpotLight(Vector3f(hindernis4.getPosition().x(), hindernis4.getPosition().y()+3, hindernis4.getPosition().z()+2), Vector3f(1f,1f,1f),
                 Vector3f(1f, 0.05f, 0.01f), Vector2f(toRadians(0f), toRadians(-180f)))
 
-            spotLight5 =  SpotLight(Vector3f(hindernis5.getPosition().x(), -49f, hindernis5.getPosition().z()+1), Vector3f(1f,1f,1f),
+            spotLight5 =  SpotLight(Vector3f(hindernis5.getPosition().x(), hindernis5.getPosition().y()+3, hindernis5.getPosition().z()+2), Vector3f(1f,1f,1f),
                 Vector3f(1f, 0.05f, 0.01f), Vector2f(toRadians(0f), toRadians(90f)))
+
+            spotLight.rotateLocal(toRadians(-10f), PI.toFloat(),0f)
+            spotLight2.rotateLocal(toRadians(-10f), PI.toFloat(),0f)
+            spotLight2.setPosition(-1f,0f,0f)
+            spotLight.setPosition(1f,0f,0f)
+            spotLight.parent=car
+            spotLight2.parent=car
 
 
 

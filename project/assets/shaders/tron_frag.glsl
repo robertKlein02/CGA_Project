@@ -122,6 +122,16 @@ vec3 spotLightIntensity(vec3 spotLightColour, float len, vec3 sp, vec3 spDir, ve
     return spotLightColour * intensity * attenuate(len, attParam);
 }
 
+vec3 spot2LightIntensity(vec3 spot2LightColour, float len, vec3 sp, vec3 spDir, vec3 attParam) {
+    float cosTheta = dot(sp, normalize(spDir));
+    float cosPhi = cos(spot2LightAngle.x);
+    float cosGamma = cos(spot2LightAngle.y);
+
+    float intensity = clamp((cosTheta - cosGamma)/(cosPhi - cosGamma), 0, 1.0);
+
+    return spot2LightColour * intensity * attenuate(len, attParam);
+}
+
 // Gamma performs gamma mapping
 vec3 Gamma(vec3 colork) {
     return pow(colork, vec3(1.0 / gamma));
@@ -231,10 +241,10 @@ void main() {
 
     //Spotlight
     result += shade(n, sp, v, diffCol, specularCol, shininess) *
-        spotLightIntensity(spotLightColor, spLength, sp, spotLightDir, spotLightAttParam);
+        spotLightIntensity(spotLightColor, spLength, sp, spotLightDir, spotLightAttParam) * 20;
 
     result += shade(n, sp1, v, diffCol, specularCol, shininess) *
-    spotLightIntensity(spot1LightColor, sp1Length, sp1, spot1LightDir, spot1LightAttParam);
+    spotLightIntensity(spot1LightColor, sp1Length, sp1, spot1LightDir, spot1LightAttParam) * 20 ;
 
     result += shade(n, sp2, v, diffCol, specularCol, shininess) *
     spotLightIntensity(spot2LightColor, sp2Length, sp2, spot2LightDir, spot2LightAttParam);
