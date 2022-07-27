@@ -462,8 +462,8 @@ class Scene(private val window: GameWindow) {
         if (window.getKeyState(GLFW_KEY_2)) {
             shaderInUse = negativeShader
         }
-        if (window.getKeyState(GLFW_KEY_3)) {
-            shaderInUse = normalShader
+        if (window.getKeyState(GLFW_KEY_SPACE)) {
+            if (speed==0f) gameReset()
         }
         if (window.getKeyState(GLFW_KEY_4)) {
             activeCamera = firstPersonCamera
@@ -476,6 +476,21 @@ class Scene(private val window: GameWindow) {
 
 
     fun onKey(key: Int, scancode: Int, action: Int, mode: Int) {}
+
+    fun gameReset(){
+        speed=5f
+        points=0
+        car.setPosition(0f,-50f,40f)
+        blockLeft.setPosition(-11f, -50f,0f)
+        blockRight.setPosition(11f, -50f,0f)
+        curbLeft.setPosition(-8.5f, -50f,0f)
+        curbRight.setPosition(8.5f, -50f,0f)
+        star1Eingesammelt=false
+        star2Eingesammelt=false
+        star3Eingesammelt=false
+        star4Eingesammelt=false
+        star5Eingesammelt=false
+    }
 
 
 
@@ -552,7 +567,7 @@ class Scene(private val window: GameWindow) {
         star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
         star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
         star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
-        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-7)
+        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
 
         // Pointlights
         pointLight = PointLight(Vector3f(star1.getPosition().x(), star1.getPosition().y(), star1.getPosition().z()), Vector3f(1f, 1f, 1f),
@@ -576,7 +591,6 @@ class Scene(private val window: GameWindow) {
                 star1Eingesammelt=true
                 points= points+1
                 println(points)
-
             }
         }
         if (abs(star2.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star2.getPosition().z() - car.getPosition().z()) < 0.5f){
@@ -607,40 +621,18 @@ class Scene(private val window: GameWindow) {
                 println(points)
             }
         }
-
-
     }
-
-
-
-
-
 
 
     fun checkCollisionHindernis(){
 
-        if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < 1.2f){
-            speed=0f
-        }
-
-        if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < 1.2f){
-            speed=0f
-        }
-
-        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < 1.2f){
-            speed=0f
-        }
-
-        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < 1.2f){
-            speed=0f
-        }
-
-        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < 1.2f){
-            speed=0f
-        }
-
-
+        if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
+        if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
+        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
+        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
+        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
     }
+
 
     fun spurZufall():Float{
 
@@ -654,6 +646,7 @@ class Scene(private val window: GameWindow) {
         if(random==6)return 4.59f
         else return 6.5f
     }
+
 
     fun onMouseMove(xpos: Double, ypos: Double) {
 
