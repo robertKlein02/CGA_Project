@@ -353,18 +353,36 @@ class Scene(private val window: GameWindow) {
         activeCamera.bind(shaderInUse)
         shaderInUse.setUniform("farbe",Vector3f(0.5f,0.5f,0.5f))
 
+
         pointLight.bind(shaderInUse,"point")
         pointLight2.bind(shaderInUse,"point2")
         pointLight3.bind(shaderInUse,"point3")
         pointLight4.bind(shaderInUse,"point4")
         pointLight5.bind(shaderInUse,"point5")
 
+        if (star1Eingesammelt==false) {
+            star1.render(shaderInUse)
 
-        if (star1Eingesammelt==false) star1.render(shaderInUse)
-        if (star2Eingesammelt==false) star2.render(shaderInUse)
-        if (star3Eingesammelt==false) star3.render(shaderInUse)
-        if (star4Eingesammelt==false) star4.render(shaderInUse)
-        if (star5Eingesammelt==false) star5.render(shaderInUse)
+        }
+        if (star2Eingesammelt==false){
+            star2.render(shaderInUse)
+
+        }
+        if (star3Eingesammelt==false){
+            star3.render(shaderInUse)
+
+        }
+        if (star4Eingesammelt==false){
+            star4.render(shaderInUse)
+
+        }
+        if (star5Eingesammelt==false){
+            star5.render(shaderInUse)
+
+        }
+
+
+        
 
 
         star1.rotateLocal(0f,0f,star1.getPosition().y() *0.05f*dt)
@@ -501,7 +519,7 @@ class Scene(private val window: GameWindow) {
         hindernis3.setPosition(spurZufall(),-50f,car.getPosition().z()-50)
         hindernis4.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
         hindernis5.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
-        
+
         star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
         star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
         star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
@@ -617,6 +635,7 @@ class Scene(private val window: GameWindow) {
         if (abs(star1.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star1.getPosition().z() - car.getPosition().z())  < 0.5f){
             if (star1Eingesammelt==false){
                 star1Eingesammelt=true
+                pointLight.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 println(points)
             }
@@ -624,6 +643,7 @@ class Scene(private val window: GameWindow) {
         if (abs(star2.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star2.getPosition().z() - car.getPosition().z()) < 0.5f){
             if (star2Eingesammelt==false){
                 star2Eingesammelt=true
+                pointLight2.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 println(points)
             }
@@ -631,6 +651,7 @@ class Scene(private val window: GameWindow) {
         if (abs(star3.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star3.getPosition().z() - car.getPosition().z()) < 0.5f){
             if (star3Eingesammelt==false){
                 star3Eingesammelt=true
+                pointLight3.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 println(points)
             }
@@ -638,6 +659,7 @@ class Scene(private val window: GameWindow) {
         if (abs(star4.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star4.getPosition().z() - car.getPosition().z()) < 0.5f){
             if (star4Eingesammelt==false){
                 star4Eingesammelt=true
+                pointLight4.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 println(points)
             }
@@ -645,6 +667,7 @@ class Scene(private val window: GameWindow) {
         if (abs(star5.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star5.getPosition().z()- car.getPosition().z())<0.5f){
             if (star5Eingesammelt==false){
                 star5Eingesammelt=true
+                pointLight5.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 println(points)
             }
