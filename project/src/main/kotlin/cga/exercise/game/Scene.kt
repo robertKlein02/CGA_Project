@@ -581,9 +581,7 @@ class Scene(private val window: GameWindow) {
     fun checkCollisionStar() {
 
 
-
-
-        if (star1.getPosition().x().roundToInt() == car.getPosition().x().roundToInt()&&star1.getPosition().z().roundToInt() == car.getPosition().z().roundToInt()){
+        if (abs(star1.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star1.getPosition().z() - car.getPosition().z())  < 0.5f){
             if (star1B==false){
                 star1B=true
                 points= points+1
@@ -591,28 +589,28 @@ class Scene(private val window: GameWindow) {
 
             }
         }
-        if (star2.getPosition().x().roundToInt() == car.getPosition().x().roundToInt()&&star2.getPosition().z().roundToInt() == car.getPosition().z().roundToInt()){
+        if (abs(star2.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star2.getPosition().z() - car.getPosition().z()) < 0.5f){
             if (star2B==false){
                 star2B=true
                 points= points+1
                 println(points)
             }
         }
-        if (star3.getPosition().x().roundToInt() == car.getPosition().x().roundToInt()&&star3.getPosition().z().roundToInt() == car.getPosition().z().roundToInt()){
+        if (abs(star3.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star3.getPosition().z() - car.getPosition().z()) < 0.5f){
             if (star3B==false){
                 star3B=true
                 points= points+1
                 println(points)
             }
         }
-        if (star4.getPosition().x().roundToInt() == car.getPosition().x().roundToInt()&&star4.getPosition().z().roundToInt() == car.getPosition().z().roundToInt()){
+        if (abs(star4.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star4.getPosition().z() - car.getPosition().z()) < 0.5f){
             if (star4B==false){
                 star4B=true
                 points= points+1
                 println(points)
             }
         }
-        if (star5.getPosition().x().roundToInt() == car.getPosition().x().roundToInt()&&star5.getPosition().z().roundToInt() == car.getPosition().z().roundToInt()){
+        if (abs(star5.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star5.getPosition().z()- car.getPosition().z())<0.5f){
             if (star5B==false){
                 star5B=true
                 points= points+1
