@@ -74,11 +74,11 @@ class Scene(private val window: GameWindow) {
     lateinit var star4:Renderable
     lateinit var star5:Renderable
 
-    var star1B=false
-    var star2B=false
-    var star3B=false
-    var star4B=false
-    var star5B=false
+    var star1Eingesammelt=false
+    var star2Eingesammelt=false
+    var star3Eingesammelt=false
+    var star4Eingesammelt=false
+    var star5Eingesammelt=false
 
 
     val camera = TronCamera()
@@ -304,17 +304,6 @@ class Scene(private val window: GameWindow) {
 
 
 
-
-
-
-
-        //---------------------------------------Rotieren------------------------------------------
-
-
-
-
-
-
         //---------------------------------------Scalieren------------------------------------------
 
         car.scaleLocal(Vector3f(0.09f))
@@ -359,6 +348,7 @@ class Scene(private val window: GameWindow) {
 
         spawnHindernis()
         checkCollisionStar()
+        checkCollisionHindernis()
         shaderInUse.use()
         activeCamera.bind(shaderInUse)
         shaderInUse.setUniform("farbe",Vector3f(0.5f,0.5f,0.5f))
@@ -370,11 +360,11 @@ class Scene(private val window: GameWindow) {
         pointLight5.bind(shaderInUse,"point5")
 
 
-        if (star1B==false) star1.render(shaderInUse)
-        if (star2B==false) star2.render(shaderInUse)
-        if (star3B==false) star3.render(shaderInUse)
-        if (star4B==false) star4.render(shaderInUse)
-        if (star5B==false) star5.render(shaderInUse)
+        if (star1Eingesammelt==false) star1.render(shaderInUse)
+        if (star2Eingesammelt==false) star2.render(shaderInUse)
+        if (star3Eingesammelt==false) star3.render(shaderInUse)
+        if (star4Eingesammelt==false) star4.render(shaderInUse)
+        if (star5Eingesammelt==false) star5.render(shaderInUse)
 
 
         star1.rotateLocal(0f,0f,star1.getPosition().y() *0.05f*dt)
@@ -424,11 +414,11 @@ class Scene(private val window: GameWindow) {
             blockRight.setPosition(blockRight.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
             curbLeft.setPosition(curbLeft.getPosition().x(), curbLeft.getPosition().y(), ground.getPosition().z())
             curbRight.setPosition(curbRight.getPosition().x(), curbRight.getPosition().y(), ground.getPosition().z())
-            star1B=false
-            star2B=false
-            star3B=false
-            star4B=false
-            star5B=false
+            star1Eingesammelt=false
+            star2Eingesammelt=false
+            star3Eingesammelt=false
+            star4Eingesammelt=false
+            star5Eingesammelt=false
 
             speed+=3
             thisLevel+=1
@@ -578,41 +568,41 @@ class Scene(private val window: GameWindow) {
 
     }
 
+
     fun checkCollisionStar() {
 
-
         if (abs(star1.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star1.getPosition().z() - car.getPosition().z())  < 0.5f){
-            if (star1B==false){
-                star1B=true
+            if (star1Eingesammelt==false){
+                star1Eingesammelt=true
                 points= points+1
                 println(points)
 
             }
         }
         if (abs(star2.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star2.getPosition().z() - car.getPosition().z()) < 0.5f){
-            if (star2B==false){
-                star2B=true
+            if (star2Eingesammelt==false){
+                star2Eingesammelt=true
                 points= points+1
                 println(points)
             }
         }
         if (abs(star3.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star3.getPosition().z() - car.getPosition().z()) < 0.5f){
-            if (star3B==false){
-                star3B=true
+            if (star3Eingesammelt==false){
+                star3Eingesammelt=true
                 points= points+1
                 println(points)
             }
         }
         if (abs(star4.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star4.getPosition().z() - car.getPosition().z()) < 0.5f){
-            if (star4B==false){
-                star4B=true
+            if (star4Eingesammelt==false){
+                star4Eingesammelt=true
                 points= points+1
                 println(points)
             }
         }
         if (abs(star5.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star5.getPosition().z()- car.getPosition().z())<0.5f){
-            if (star5B==false){
-                star5B=true
+            if (star5Eingesammelt==false){
+                star5Eingesammelt=true
                 points= points+1
                 println(points)
             }
@@ -627,7 +617,30 @@ class Scene(private val window: GameWindow) {
 
 
 
-    fun checkCollisionHindernis(){}
+    fun checkCollisionHindernis(){
+
+        if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < 0.5f){
+            speed=0f
+        }
+
+        if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < 0.5f){
+            speed=0f
+        }
+
+        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < 0.5f){
+            speed=0f
+        }
+
+        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < 0.5f){
+            speed=0f
+        }
+
+        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < 0.5f){
+            speed=0f
+        }
+
+
+    }
 
     fun spurZufall():Float{
 
