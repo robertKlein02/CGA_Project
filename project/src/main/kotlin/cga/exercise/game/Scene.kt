@@ -185,7 +185,7 @@ class Scene(private val window: GameWindow) {
         val objResHindernis : OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/hindernis.obj")
         val objMeshListHindernis : MutableList<OBJLoader.OBJMesh> = objResHindernis.objects[0].meshes
 
-        val resStar: OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/Star.obj")
+        val resStar: OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/stars.obj")
         val objStar: MutableList<OBJLoader.OBJMesh> = resStar.objects[0].meshes
 
         val groundEmitTexture = Texture2D("assets/textures/str.png", true)
@@ -538,11 +538,11 @@ class Scene(private val window: GameWindow) {
         star4.rotateLocal(1.9f, 0f, 0.0f)
         star5.rotateLocal(1.9f, 0f, 0.0f)
 
-        star1.scaleLocal(Vector3f(0.5f))
-        star2.scaleLocal(Vector3f(0.5f))
-        star3.scaleLocal(Vector3f(0.5f))
-        star4.scaleLocal(Vector3f(0.5f))
-        star5.scaleLocal(Vector3f(0.5f))
+        star1.scaleLocal(Vector3f(0.05f))
+        star2.scaleLocal(Vector3f(0.05f))
+        star3.scaleLocal(Vector3f(0.05f))
+        star4.scaleLocal(Vector3f(0.05f))
+        star5.scaleLocal(Vector3f(0.05f))
 
 
 
