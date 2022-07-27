@@ -480,6 +480,7 @@ class Scene(private val window: GameWindow) {
     fun gameReset(){
         speed=5f
         points=0
+        ground.setPosition(0f,-50f,0f)
         car.setPosition(0f,-50f,40f)
         blockLeft.setPosition(-11f, -50f,0f)
         blockRight.setPosition(11f, -50f,0f)
@@ -490,6 +491,20 @@ class Scene(private val window: GameWindow) {
         star3Eingesammelt=false
         star4Eingesammelt=false
         star5Eingesammelt=false
+
+
+        hindernis1.setPosition(spurZufall(),-50f,car.getPosition().z()-20)
+        hindernis2.setPosition(spurZufall(),-50f,car.getPosition().z()-35)
+        hindernis3.setPosition(spurZufall(),-50f,car.getPosition().z()-50)
+        hindernis4.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
+        hindernis5.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
+
+        star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
+        star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
+        star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
+        star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
+        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
+
     }
 
 
