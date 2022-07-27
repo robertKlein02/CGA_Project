@@ -619,23 +619,23 @@ class Scene(private val window: GameWindow) {
 
     fun checkCollisionHindernis(){
 
-        if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < 0.5f){
+        if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < 1.2f){
             speed=0f
         }
 
-        if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < 0.5f){
+        if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < 1.2f){
             speed=0f
         }
 
-        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < 0.5f){
+        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < 1.2f){
             speed=0f
         }
 
-        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < 0.5f){
+        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < 1.2f){
             speed=0f
         }
 
-        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < 0.5f){
+        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < 1.2f){
             speed=0f
         }
 
