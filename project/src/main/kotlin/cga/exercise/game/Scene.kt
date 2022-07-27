@@ -501,12 +501,23 @@ class Scene(private val window: GameWindow) {
         hindernis3.setPosition(spurZufall(),-50f,car.getPosition().z()-50)
         hindernis4.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
         hindernis5.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
-
+        
         star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
         star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
         star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
         star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
         star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
+
+        pointLight = PointLight(Vector3f(star1.getPosition().x(), star1.getPosition().y(), star1.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
+        pointLight2 = PointLight(Vector3f(star2.getPosition().x(), star2.getPosition().y(), star2.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
+        pointLight3 = PointLight(Vector3f(star3.getPosition().x(), star3.getPosition().y(), star3.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
+        pointLight4 = PointLight(Vector3f(star4.getPosition().x(), star4.getPosition().y(), star4.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
+        pointLight5 = PointLight(Vector3f(star5.getPosition().x(), star5.getPosition().y(), star5.getPosition().z()), Vector3f(1f, 1f, 1f),
+            Vector3f(0.1f, 0.5f, 0.05f))
     }
 
 
