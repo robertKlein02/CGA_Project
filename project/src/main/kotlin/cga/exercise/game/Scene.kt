@@ -147,6 +147,19 @@ class Scene(private val window: GameWindow) {
 
     //scene setup
     init {
+        // GAME INSTRUCTION
+        println("\n")
+        println("############################ Controls #######################\n")
+        println("Press 'A' oder 'D' to move left or right")
+        println("Press 'SPACE' for reset")
+        println("Press '4' or '5' to change the camera perspective.")
+        println("Press '1' or '2' to switch between shaders.\n")
+
+        println("########################### How to play #####################\n")
+        println("Try to collect all the stars and avoid the stones")
+        println("Have fun!\n")
+        println("########################### Start ###########################\n")
+
         skyboxShader = ShaderProgram("assets/shaders/skyBoxVert.glsl", "assets/shaders/skyBoxFrag.glsl")
         staticShader = ShaderProgram("assets/shaders/simple_vert.glsl", "assets/shaders/simple_frag.glsl")
         tronShader = ShaderProgram("assets/shaders/tron_vert.glsl", "assets/shaders/tron_frag.glsl")
@@ -639,7 +652,7 @@ class Scene(private val window: GameWindow) {
                 pointLight.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 speed= speed+1
-                println(points)
+                println("${points} Stars cought")
             }
         }
         if (abs(star2.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star2.getPosition().z() - car.getPosition().z()) < minimumDistanz){
@@ -648,7 +661,7 @@ class Scene(private val window: GameWindow) {
                 pointLight2.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 speed= speed+1
-                println(points)
+                println("${points} Stars cought")
             }
         }
         if (abs(star3.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star3.getPosition().z() - car.getPosition().z()) < minimumDistanz){
@@ -657,7 +670,7 @@ class Scene(private val window: GameWindow) {
                 pointLight3.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 speed= speed+1
-                println(points)
+                println("${points} Stars cought")
             }
         }
         if (abs(star4.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star4.getPosition().z() - car.getPosition().z()) < minimumDistanz){
@@ -666,7 +679,7 @@ class Scene(private val window: GameWindow) {
                 pointLight4.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 speed= speed+1
-                println(points)
+                println("${points} Stars cought")
             }
         }
         if (abs(star5.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star5.getPosition().z()- car.getPosition().z())< minimumDistanz){
@@ -675,7 +688,7 @@ class Scene(private val window: GameWindow) {
                 pointLight5.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 speed= speed+1
-                println(points)
+                println("${points} Stars cought")
             }
         }
     }
