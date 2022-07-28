@@ -438,7 +438,7 @@ class Scene(private val window: GameWindow) {
             star4Eingesammelt=false
             star5Eingesammelt=false
 
-            speed+=3
+
             thisLevel+=1
 
         }
@@ -520,11 +520,11 @@ class Scene(private val window: GameWindow) {
         hindernis4.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
         hindernis5.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
 
-        star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
-        star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
-        star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
-        star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
-        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
+        star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
+        star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
+        star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
+        star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
+        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
 
         pointLight = PointLight(Vector3f(star1.getPosition().x(), star1.getPosition().y(), star1.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
@@ -608,12 +608,11 @@ class Scene(private val window: GameWindow) {
         star5.scaleLocal(Vector3f(0.05f))
 
 
-
-        star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
-        star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
-        star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
-        star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
-        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
+        star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
+        star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
+        star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
+        star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
+        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
 
         // Pointlights
         pointLight = PointLight(Vector3f(star1.getPosition().x(), star1.getPosition().y(), star1.getPosition().z()), Vector3f(1f, 1f, 1f),
@@ -632,43 +631,50 @@ class Scene(private val window: GameWindow) {
 
     fun checkCollisionStar() {
 
-        if (abs(star1.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star1.getPosition().z() - car.getPosition().z())  < 0.5f){
+        var minimumDistanz:Float=0.5f
+
+        if (abs(star1.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star1.getPosition().z() - car.getPosition().z())  < minimumDistanz){
             if (star1Eingesammelt==false){
                 star1Eingesammelt=true
                 pointLight.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
+                speed= speed+1
                 println(points)
             }
         }
-        if (abs(star2.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star2.getPosition().z() - car.getPosition().z()) < 0.5f){
+        if (abs(star2.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star2.getPosition().z() - car.getPosition().z()) < minimumDistanz){
             if (star2Eingesammelt==false){
                 star2Eingesammelt=true
                 pointLight2.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
+                speed= speed+1
                 println(points)
             }
         }
-        if (abs(star3.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star3.getPosition().z() - car.getPosition().z()) < 0.5f){
+        if (abs(star3.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star3.getPosition().z() - car.getPosition().z()) < minimumDistanz){
             if (star3Eingesammelt==false){
                 star3Eingesammelt=true
                 pointLight3.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
+                speed= speed+1
                 println(points)
             }
         }
-        if (abs(star4.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star4.getPosition().z() - car.getPosition().z()) < 0.5f){
+        if (abs(star4.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star4.getPosition().z() - car.getPosition().z()) < minimumDistanz){
             if (star4Eingesammelt==false){
                 star4Eingesammelt=true
                 pointLight4.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
+                speed= speed+1
                 println(points)
             }
         }
-        if (abs(star5.getPosition().x() - car.getPosition().x()) < 0.5f  &&  abs(star5.getPosition().z()- car.getPosition().z())<0.5f){
+        if (abs(star5.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star5.getPosition().z()- car.getPosition().z())< minimumDistanz){
             if (star5Eingesammelt==false){
                 star5Eingesammelt=true
                 pointLight5.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
+                speed= speed+1
                 println(points)
             }
         }
@@ -677,11 +683,13 @@ class Scene(private val window: GameWindow) {
 
     fun checkCollisionHindernis(){
 
-        if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
-        if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
-        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
-        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
-        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < 1.2f  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
+        var minimumDistanz:Float=1.2f
+
+        if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
+        if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
+        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
+        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
+        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
     }
 
 

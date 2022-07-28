@@ -243,20 +243,20 @@ void main() {
     result += shade(n, sp, v, diffCol, specularCol, shininess) *
         spotLightIntensity(spotLightColor, spLength, sp, spotLightDir, spotLightAttParam) * 20;
 
-    result += shade(n, sp1, v, diffCol, specularCol, shininess) *
-    spotLightIntensity(spot1LightColor, sp1Length, sp1, spot1LightDir, spot1LightAttParam) * 20 ;
+  //  result += shade(n, sp1, v, diffCol, specularCol, shininess) *
+  //  spotLightIntensity(spot1LightColor, sp1Length, sp1, spot1LightDir, spot1LightAttParam) ;
 
     result += shade(n, sp2, v, diffCol, specularCol, shininess) *
-    spotLightIntensity(spot2LightColor, sp2Length, sp2, spot2LightDir, spot2LightAttParam);
+    spotLightIntensity(spot2LightColor, sp2Length, sp2, spot2LightDir, spot2LightAttParam)*20;
 
-    result += shade(n, sp3, v, diffCol, specularCol, shininess) *
-    spotLightIntensity(spot3LightColor, sp3Length, sp3, spot3LightDir, spot3LightAttParam);
+  // result += shade(n, sp3, v, diffCol, specularCol, shininess) *
+  // spotLightIntensity(spot3LightColor, sp3Length, sp3, spot3LightDir, spot3LightAttParam);
 
-    result += shade(n, sp4, v, diffCol, specularCol, shininess) *
-    spotLightIntensity(spot4LightColor, sp4Length, sp4, spot4LightDir, spot4LightAttParam);
+  // result += shade(n, sp4, v, diffCol, specularCol, shininess) *
+  // spotLightIntensity(spot4LightColor, sp4Length, sp4, spot4LightDir, spot4LightAttParam);
 
-    result += shade(n, sp5, v, diffCol, specularCol, shininess) *
-    spotLightIntensity(spot5LightColor, sp5Length, sp5, spot5LightDir, spot5LightAttParam);
+  // result += shade(n, sp5, v, diffCol, specularCol, shininess) *
+  // spotLightIntensity(spot5LightColor, sp5Length, sp5, spot5LightDir, spot5LightAttParam);
 
 
 
