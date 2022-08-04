@@ -11,12 +11,12 @@ Car and Stars
 - Skybox implementieren. 
 - First person view.
 - Negative shader.
-- Automatische Versetzung der Umgebung beim Erreichen eines Z Wertes.
-- Bei "Game Over" die Möglichkeit für Neustart.
+- Automatische Versetzung der Umgebung beim erreichen eines Z Wertes.
+- Bei "Game Over"  Möglichkeit für Neustart.
 - Sterne einsammeln können (Sterne verschwinden und werden gezählt).
-- Kollision Erkennung Stern & Stein.
+- Kollisionserkennung Stern & Stein.
 - Bewegung eingrenzen. 
-- Speed erhöhen in Bezug auf Anzahl der Sterne. 
+- Speed erhöhen in bezug auf Anzahl der Sterne. 
 - Zufälliges platzieren von Objekten.
 - Drehen von Sternen um eigene Achse.
 
