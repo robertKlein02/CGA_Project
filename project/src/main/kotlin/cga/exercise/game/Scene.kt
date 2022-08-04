@@ -67,29 +67,18 @@ class Scene(private val window: GameWindow) {
     lateinit var hindernis4:Renderable
     lateinit var hindernis5:Renderable
 
-
-    lateinit var star1:Renderable
-    lateinit var star2:Renderable
-    lateinit var star3:Renderable
-    lateinit var star4:Renderable
-    lateinit var star5:Renderable
-
-    var star1Eingesammelt=false
-    var star2Eingesammelt=false
-    var star3Eingesammelt=false
-    var star4Eingesammelt=false
-    var star5Eingesammelt=false
+    var star1=Star()
+    var star2=Star()
+    var star3=Star()
+    var star4=Star()
+    var star5=Star()
 
 
     val camera = TronCamera()
     val firstPersonCamera = TronCamera()
     private var activeCamera = camera
 
-    lateinit var pointLight : PointLight
-    lateinit var pointLight2 : PointLight
-    lateinit var pointLight3 : PointLight
-    lateinit var pointLight4 : PointLight
-    lateinit var pointLight5 : PointLight
+
 
     lateinit var spotLight: SpotLight
     lateinit var spotLight2: SpotLight
@@ -142,8 +131,6 @@ class Scene(private val window: GameWindow) {
 
 
 
-    private var direction = 0.0f
-    private var difference: Vector3f = Vector3f(0.0f, 0.0f, 0.0f)
 
     //scene setup
     init {
@@ -236,9 +223,9 @@ class Scene(private val window: GameWindow) {
         groundDiffTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
         groundSpecTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
-        starEmit.setTexParams(GL_REPEAT, GL_REPEAT, GL11.GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
-        starDiff.setTexParams(GL_REPEAT, GL_REPEAT, GL11.GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
-        starSpec.setTexParams(GL_REPEAT, GL_REPEAT, GL11.GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+        starEmit.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+        starDiff.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+        starSpec.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
         val groundShininess = 60f
         val groundTCMultiplier = Vector2f(2f,20f)
@@ -301,11 +288,11 @@ class Scene(private val window: GameWindow) {
         //---------------------------------------Camera------------------------------------------
 
         //thirdPerson Camera
-        camera.rotateLocal(Math.toRadians(-20f),0f, 0f)
+        camera.rotateLocal(toRadians(-20f),0f, 0f)
         camera.translateLocal(Vector3f(0f, 0f, 20f))
 
         //firstPerson Camera
-        firstPersonCamera.rotateLocal(Math.toRadians(-10f),0f, 0f)
+        firstPersonCamera.rotateLocal(toRadians(-10f),0f, 0f)
         firstPersonCamera.translateLocal(Vector3f(0f, 4.5f, 2.5f))
 
 
@@ -360,37 +347,48 @@ class Scene(private val window: GameWindow) {
         glDepthFunc(GL_LESS);
 
         spawnHindernis()
-        checkCollisionStar()
-        checkCollisionHindernis()
+
+        checkCollisionStar(star1)
+        checkCollisionStar(star2)
+        checkCollisionStar(star3)
+        checkCollisionStar(star4)
+        checkCollisionStar(star5)
+
+        checkCollisionHindernis(hindernis1)
+        checkCollisionHindernis(hindernis2)
+        checkCollisionHindernis(hindernis3)
+        checkCollisionHindernis(hindernis4)
+        checkCollisionHindernis(hindernis5)
+
         shaderInUse.use()
         activeCamera.bind(shaderInUse)
         shaderInUse.setUniform("farbe",Vector3f(0.5f,0.5f,0.5f))
 
 
-        pointLight.bind(shaderInUse,"point")
-        pointLight2.bind(shaderInUse,"point2")
-        pointLight3.bind(shaderInUse,"point3")
-        pointLight4.bind(shaderInUse,"point4")
-        pointLight5.bind(shaderInUse,"point5")
+        star1.pointLight.bind(shaderInUse,"point")
+        star2.pointLight.bind(shaderInUse,"point2")
+        star3.pointLight.bind(shaderInUse,"point3")
+        star4.pointLight.bind(shaderInUse,"point4")
+        star5.pointLight.bind(shaderInUse,"point5")
 
-        if (star1Eingesammelt==false) {
-            star1.render(shaderInUse)
-
-        }
-        if (star2Eingesammelt==false){
-            star2.render(shaderInUse)
+        if (star1.eingesammelt==false){
+            star1.star.render(shaderInUse)
 
         }
-        if (star3Eingesammelt==false){
-            star3.render(shaderInUse)
+        if (star2.eingesammelt==false){
+            star2.star.render(shaderInUse)
 
         }
-        if (star4Eingesammelt==false){
-            star4.render(shaderInUse)
+        if (star3.eingesammelt==false){
+            star3.star.render(shaderInUse)
 
         }
-        if (star5Eingesammelt==false){
-            star5.render(shaderInUse)
+        if (star4.eingesammelt==false){
+            star4.star.render(shaderInUse)
+
+        }
+        if (star5.eingesammelt==false){
+            star5.star.render(shaderInUse)
 
         }
 
@@ -398,11 +396,11 @@ class Scene(private val window: GameWindow) {
         
 
 
-        star1.rotateLocal(0f,0f,star1.getPosition().y() *0.05f*dt)
-        star2.rotateLocal(0f,0f,star2.getPosition().y() *0.05f*dt)
-        star3.rotateLocal(0f,0f,star3.getPosition().y() *0.05f*dt)
-        star4.rotateLocal(0f,0f,star4.getPosition().y() *0.05f*dt)
-        star5.rotateLocal(0f,0f,star5.getPosition().y() *0.05f*dt)
+        star1.star.rotateLocal(0f,0f,star1.star.getPosition().y() *0.05f*dt)
+        star2.star.rotateLocal(0f,0f,star2.star.getPosition().y() *0.05f*dt)
+        star3.star.rotateLocal(0f,0f,star3.star.getPosition().y() *0.05f*dt)
+        star4.star.rotateLocal(0f,0f,star4.star.getPosition().y() *0.05f*dt)
+        star5.star.rotateLocal(0f,0f,star5.star.getPosition().y() *0.05f*dt)
 
 
         hindernis1.render(shaderInUse)
@@ -445,11 +443,11 @@ class Scene(private val window: GameWindow) {
             blockRight.setPosition(blockRight.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
             curbLeft.setPosition(curbLeft.getPosition().x(), curbLeft.getPosition().y(), ground.getPosition().z())
             curbRight.setPosition(curbRight.getPosition().x(), curbRight.getPosition().y(), ground.getPosition().z())
-            star1Eingesammelt=false
-            star2Eingesammelt=false
-            star3Eingesammelt=false
-            star4Eingesammelt=false
-            star5Eingesammelt=false
+            star1.eingesammelt=false
+            star2.eingesammelt=false
+            star3.eingesammelt=false
+            star4.eingesammelt=false
+            star5.eingesammelt=false
 
 
             thisLevel+=1
@@ -521,11 +519,11 @@ class Scene(private val window: GameWindow) {
         curbLeft.setPosition(-8.5f, -50f,0f)
         curbRight.setPosition(8.5f, -50f,0f)
 
-        star1Eingesammelt=false
-        star2Eingesammelt=false
-        star3Eingesammelt=false
-        star4Eingesammelt=false
-        star5Eingesammelt=false
+        star1.eingesammelt=false
+        star2.eingesammelt=false
+        star3.eingesammelt=false
+        star4.eingesammelt=false
+        star5.eingesammelt=false
 
         hindernis1.setPosition(spurZufall(),-50f,car.getPosition().z()-20)
         hindernis2.setPosition(spurZufall(),-50f,car.getPosition().z()-35)
@@ -533,21 +531,21 @@ class Scene(private val window: GameWindow) {
         hindernis4.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
         hindernis5.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
 
-        star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
-        star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
-        star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
-        star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
-        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
+        star1.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
+        star2.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
+        star3.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
+        star4.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
+        star5.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
 
-        pointLight = PointLight(Vector3f(star1.getPosition().x(), star1.getPosition().y(), star1.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star1.pointLight = PointLight(Vector3f(star1.star.getPosition().x(), star1.star.getPosition().y(), star1.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight2 = PointLight(Vector3f(star2.getPosition().x(), star2.getPosition().y(), star2.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star2.pointLight = PointLight(Vector3f(star2.star.getPosition().x(), star2.star.getPosition().y(), star2.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight3 = PointLight(Vector3f(star3.getPosition().x(), star3.getPosition().y(), star3.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star3.pointLight = PointLight(Vector3f(star3.star.getPosition().x(), star3.star.getPosition().y(), star3.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight4 = PointLight(Vector3f(star4.getPosition().x(), star4.getPosition().y(), star4.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star4.pointLight = PointLight(Vector3f(star4.star.getPosition().x(), star4.star.getPosition().y(), star4.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight5 = PointLight(Vector3f(star5.getPosition().x(), star5.getPosition().y(), star5.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star5.pointLight = PointLight(Vector3f(star5.star.getPosition().x(), star5.star.getPosition().y(), star5.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
     }
 
@@ -602,107 +600,68 @@ class Scene(private val window: GameWindow) {
 
     fun spwanStar(){
 
-        star1= Renderable(meshListStar)
-        star2=Renderable(meshListStar)
-        star3=Renderable(meshListStar)
-        star4=Renderable(meshListStar)
-        star5=Renderable(meshListStar)
+        star1.star= Renderable(meshListStar)
+        star2.star=Renderable(meshListStar)
+        star3.star=Renderable(meshListStar)
+        star4.star=Renderable(meshListStar)
+        star5.star=Renderable(meshListStar)
 
-        star1.rotateLocal(1.9f, 0f, 0.0f)
-        star2.rotateLocal(1.9f, 0f, 0.0f)
-        star3.rotateLocal(1.9f, 0f, 0.0f)
-        star4.rotateLocal(1.9f, 0f, 0.0f)
-        star5.rotateLocal(1.9f, 0f, 0.0f)
+        star1.star.rotateLocal(1.9f, 0f, 0.0f)
+        star2.star.rotateLocal(1.9f, 0f, 0.0f)
+        star3.star.rotateLocal(1.9f, 0f, 0.0f)
+        star4.star.rotateLocal(1.9f, 0f, 0.0f)
+        star5.star.rotateLocal(1.9f, 0f, 0.0f)
 
-        star1.scaleLocal(Vector3f(0.05f))
-        star2.scaleLocal(Vector3f(0.05f))
-        star3.scaleLocal(Vector3f(0.05f))
-        star4.scaleLocal(Vector3f(0.05f))
-        star5.scaleLocal(Vector3f(0.05f))
+        star1.star.scaleLocal(Vector3f(0.05f))
+        star2.star.scaleLocal(Vector3f(0.05f))
+        star3.star.scaleLocal(Vector3f(0.05f))
+        star4.star.scaleLocal(Vector3f(0.05f))
+        star5.star.scaleLocal(Vector3f(0.05f))
 
 
-        star1.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
-        star2.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
-        star3.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
-        star4.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
-        star5.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
+        star1.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
+        star2.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
+        star3.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-42)
+        star4.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-57)
+        star5.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-72)
 
         // Pointlights
-        pointLight = PointLight(Vector3f(star1.getPosition().x(), star1.getPosition().y(), star1.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star1.pointLight = PointLight(Vector3f(star1.star.getPosition().x(), star1.star.getPosition().y(), star1.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight2 = PointLight(Vector3f(star2.getPosition().x(), star2.getPosition().y(), star2.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star2.pointLight = PointLight(Vector3f(star2.star.getPosition().x(), star2.star.getPosition().y(), star2.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight3 = PointLight(Vector3f(star3.getPosition().x(), star3.getPosition().y(), star3.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star3.pointLight = PointLight(Vector3f(star3.star.getPosition().x(), star3.star.getPosition().y(), star3.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight4 = PointLight(Vector3f(star4.getPosition().x(), star4.getPosition().y(), star4.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star4.pointLight = PointLight(Vector3f(star4.star.getPosition().x(), star4.star.getPosition().y(), star4.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
-        pointLight5 = PointLight(Vector3f(star5.getPosition().x(), star5.getPosition().y(), star5.getPosition().z()), Vector3f(1f, 1f, 1f),
+        star5.pointLight = PointLight(Vector3f(star5.star.getPosition().x(), star5.star.getPosition().y(), star5.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
 
     }
 
 
-    fun checkCollisionStar() {
+    fun checkCollisionStar(star: Star) {
 
         var minimumDistanz=0.5f
 
-        if (abs(star1.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star1.getPosition().z() - car.getPosition().z())  < minimumDistanz){
-            if (star1Eingesammelt==false){
-                star1Eingesammelt=true
-                pointLight.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
+        if (abs(star.star.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star.star.getPosition().z() - car.getPosition().z())  < minimumDistanz){
+            if (star.eingesammelt==false){
+                star.eingesammelt=true
+                star.pointLight.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 speed= speed+1
-                println("${points} Stars cought")
+                println("$points Stars cought")
             }
         }
-        if (abs(star2.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star2.getPosition().z() - car.getPosition().z()) < minimumDistanz){
-            if (star2Eingesammelt==false){
-                star2Eingesammelt=true
-                pointLight2.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
-                points= points+1
-                speed= speed+1
-                println("${points} Stars cought")
-            }
-        }
-        if (abs(star3.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star3.getPosition().z() - car.getPosition().z()) < minimumDistanz){
-            if (star3Eingesammelt==false){
-                star3Eingesammelt=true
-                pointLight3.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
-                points= points+1
-                speed= speed+1
-                println("${points} Stars cought")
-            }
-        }
-        if (abs(star4.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star4.getPosition().z() - car.getPosition().z()) < minimumDistanz){
-            if (star4Eingesammelt==false){
-                star4Eingesammelt=true
-                pointLight4.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
-                points= points+1
-                speed= speed+1
-                println("${points} Stars cought")
-            }
-        }
-        if (abs(star5.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star5.getPosition().z()- car.getPosition().z())< minimumDistanz){
-            if (star5Eingesammelt==false){
-                star5Eingesammelt=true
-                pointLight5.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
-                points= points+1
-                speed= speed+1
-                println("${points} Stars cought")
-            }
-        }
+
     }
 
 
-    fun checkCollisionHindernis(){
+    fun checkCollisionHindernis(renderable: Renderable){
 
         var minimumDistanz=1.2f
 
-        if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
-        if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
-        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
-        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
-        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
+        if (abs(renderable.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(renderable.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
     }
 
 
