@@ -644,7 +644,7 @@ class Scene(private val window: GameWindow) {
 
     fun checkCollisionStar() {
 
-        var minimumDistanz:Float=0.5f
+        var minimumDistanz=0.5f
 
         if (abs(star1.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(star1.getPosition().z() - car.getPosition().z())  < minimumDistanz){
             if (star1Eingesammelt==false){
@@ -696,13 +696,13 @@ class Scene(private val window: GameWindow) {
 
     fun checkCollisionHindernis(){
 
-        var minimumDistanz:Float=1.2f
+        var minimumDistanz=1.2f
 
         if (abs(hindernis1.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis1.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
         if (abs(hindernis2.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis2.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
-        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
-        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
-        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < 1.2f) speed=0f
+        if (abs(hindernis3.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis3.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
+        if (abs(hindernis4.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis4.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
+        if (abs(hindernis5.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(hindernis5.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
     }
 
 
@@ -721,20 +721,20 @@ class Scene(private val window: GameWindow) {
 
 
     fun onMouseMove(xpos: Double, ypos: Double) {
-
-        val deltaX = xpos - oldMousePosX
-        //var deltaY = ypos - oldMousePosY
-
-        oldMousePosX = xpos
-       // oldMousePosY = ypos
-
-        if(notFirstFrame) {
-            activeCamera.rotateAroundPoint(0f, toRadians(deltaX.toFloat() * 0.05f), 0f, Vector3f(0f))
-            //camera.rotateAroundPoint(toRadians(deltaY.toFloat()*0.05f), 0f,0f,camera.getXAxis())
-        }
-
-        notFirstFrame = true
-
+//
+    //    val deltaX = xpos - oldMousePosX
+    //    //var deltaY = ypos - oldMousePosY
+//
+    //    oldMousePosX = xpos
+    //   // oldMousePosY = ypos
+//
+    //    if(notFirstFrame) {
+    //        activeCamera.rotateAroundPoint(0f, toRadians(deltaX.toFloat() * 0.05f), 0f, Vector3f(0f))
+    //        //camera.rotateAroundPoint(toRadians(deltaY.toFloat()*0.05f), 0f,0f,camera.getXAxis())
+    //    }
+//
+    //    notFirstFrame = true
+//
 
     }
 
