@@ -23,9 +23,9 @@ Car and Stars
 
 
 # Quellenverzeichnis
-Skybox (https://www.humus.name/index.php?page=Textures)
-Car (https://downloadfree3d.com/3d-models/vehicles/car/scion-frs-2013-high-poly/)
-Star (Adobe Dimension Vorlagen)
-Straße Texture (https://www.bienenfisch-design.de/produkt/strassen-textur-003/) (wurden überarebitet) 
-Haus Texture (https://www.freepik.com/premium-photo/modern-spanish-block-flats-nice-district_15657958.htm) (wurden überarebitet) 
-Bordstein Texture (https://www.freejpg.com.ar/imagenes/premium/912017542/textura-de-asfalto-en-tono-marron) (wurden überarebitet) 
+- Skybox (https://www.humus.name/index.php?page=Textures)
+- Car (https://downloadfree3d.com/3d-models/vehicles/car/scion-frs-2013-high-poly/)
+- Star (Adobe Dimension Vorlagen)
+- Straße Texture (https://www.bienenfisch-design.de/produkt/strassen-textur-003/) (wurden überarebitet) 
+- Haus Texture (https://www.freepik.com/premium-photo/modern-spanish-block-flats-nice-district_15657958.htm) (wurden überarebitet) 
+- Bordstein Texture (https://www.freejpg.com.ar/imagenes/premium/912017542/textura-de-asfalto-en-tono-marron) (wurden überarebitet) 
