@@ -1,12 +1,6 @@
-# CGAProject
-Dies ist das Template-Projekt für die Abschlussprojekte im Modul "Computergrafik und Animation" an der TH Köln.
-
-Bitte nutzen Sie dieses Template-Repository ("Use this template") und entwickeln Sie Ihr Abschlussprojekt mit dieser Vorlage. Denken Sie daran *fabianfriederichs*, *jm-th-koeln* und *oberberg* (Prof. Horst Stenzel) als Collaborators hinzuzufügen, damit wir darauf zugreifen können.
-
-Löschen Sie als erstes den Abschnitt CGAProjekt in dieser Datei und füllen Sie den Rest entsprechend aus für die Abgabe.
 
 # Projektname
-Fügen Sie ihren Projektnamen hinzu
+Car and Stars
 
 # Teammitglieder
 - Florian Berghahn
@@ -14,15 +8,19 @@ Fügen Sie ihren Projektnamen hinzu
 - Robert Klein 
 
 # Featureliste
-Listen Sie hier alle relevanten Features als Liste mit sinnvoller Reihenfolge auf mit Angabe wer das Feature implementiert hat.
-Bei starker Ungleicheit der Features behalten wir uns eine individuelle Notenvergabe vor.
+- Skybox implementieren. 
+- First person view.
+- Negative shader.
+- Automatische Versetzung der Umgebung beim Erreichen eines Z Wertes.
+- Bei "Game Over" die Möglichkeit für Neustart.
+- Sterne einsammeln können (Sterne verschwinden und werden gezählt).
+- Kollision Erkennung Stern & Stein.
+- Bewegung eingrenzen. 
+- Speed erhöhen in Bezug auf Anzahl der Sterne. 
+- Zufälliges platzieren von Objekten.
+- Drehen von Sternen um eigene Achse.
 
-Bsp.
 
-- Verschiedene Kameramodelle (Wechsel zwischen orthographischer und perspektivischer Kamera mittels "c") (Berta)
-- Dynamische Kamera (Steuerung mittels Maus und "WASD" auf der Tastatur) (Carola und Armin)
-- Verschiedene Shaderprogramme (Wechsel mittels "s") (Carola)
-- ...
 
 # Quellenverzeichnis
-Listen Sie hier ALLE Quellen der genutzten Ressourcen auf.
+Skybox (https://www.humus.name/index.php?page=Textures)
