@@ -46,6 +46,8 @@ class Scene(private val window: GameWindow) {
     private val meshListHindernis= mutableListOf<Mesh>()
     private val meshListStar= mutableListOf<Mesh>()
 
+    var nachRechts=true
+    var nachLinks=false
 
     var speed:Float=5f
     var level:Int=1
@@ -67,11 +69,11 @@ class Scene(private val window: GameWindow) {
     lateinit var hindernis4:Renderable
     lateinit var hindernis5:Renderable
 
-    var star1=Star()
-    var star2=Star()
-    var star3=Star()
-    var star4=Star()
-    var star5=Star()
+    val star1=Star()
+    val star2=Star()
+    val star3=Star()
+    val star4=Star()
+    val star5=Star()
 
 
     val camera = TronCamera()
@@ -460,9 +462,36 @@ class Scene(private val window: GameWindow) {
     }
 
 
+    fun hindernisBewegen(renderable: Renderable,dt: Float){
+
+        if (nachRechts){
+            renderable.translateLocal(Vector3f(  0.001f  * +dt,0f,0f))
+            if (renderable.getPosition().x() >= 6f){
+                nachLinks=true
+                nachRechts=false
+            }
+        }
+
+        if(nachLinks){
+            renderable.translateLocal(Vector3f(   0.001f  * -dt,0f,0f))
+            if (renderable.getPosition().x() <= -6f){
+                nachLinks=false
+                nachRechts=true
+            }
+        }
+    }
+
     fun update(dt: Float, t: Float) {
 
         car.translateGlobal(Vector3f(0f, 0f, speed * -dt))
+
+        hindernisBewegen(hindernis1,t)
+        hindernisBewegen(hindernis2,t)
+        hindernisBewegen(hindernis3,t)
+        hindernisBewegen(hindernis4,t)
+        hindernisBewegen(hindernis5,t)
+
+        println( hindernis1.getPosition().x())
 
      when {
          window.getKeyState(GLFW_KEY_A) -> {
@@ -548,6 +577,7 @@ class Scene(private val window: GameWindow) {
         star5.pointLight = PointLight(Vector3f(star5.star.getPosition().x(), star5.star.getPosition().y(), star5.star.getPosition().z()), Vector3f(1f, 1f, 1f),
             Vector3f(0.1f, 0.5f, 0.05f))
     }
+
 
 
 
