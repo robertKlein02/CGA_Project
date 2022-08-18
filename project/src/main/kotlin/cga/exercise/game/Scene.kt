@@ -465,7 +465,7 @@ class Scene(private val window: GameWindow) {
     fun hindernisBewegen(renderable: Renderable,dt: Float){
 
         if (nachRechts){
-            renderable.translateLocal(Vector3f(  0.001f  * +dt,0f,0f))
+            renderable.translateLocal(Vector3f(  0.1f*speed  * +dt,0f,0f))
             if (renderable.getPosition().x() >= 7f){
                 nachLinks=true
                 nachRechts=false
@@ -473,7 +473,7 @@ class Scene(private val window: GameWindow) {
         }
 
         if(nachLinks){
-            renderable.translateLocal(Vector3f(   0.001f  * -dt,0f,0f))
+            renderable.translateLocal(Vector3f(   0.1f*speed  * -dt,0f,0f))
             if (renderable.getPosition().x() <= -7f){
                 nachLinks=false
                 nachRechts=true
@@ -485,13 +485,13 @@ class Scene(private val window: GameWindow) {
 
         car.translateGlobal(Vector3f(0f, 0f, speed * -dt))
 
-        hindernisBewegen(hindernis1,t)
-        hindernisBewegen(hindernis2,t)
-        hindernisBewegen(hindernis3,t)
-        hindernisBewegen(hindernis4,t)
-        hindernisBewegen(hindernis5,t)
+        hindernisBewegen(hindernis1,dt)
+        hindernisBewegen(hindernis2,dt)
+        hindernisBewegen(hindernis3,dt)
+        hindernisBewegen(hindernis4,dt)
+        hindernisBewegen(hindernis5,dt)
 
-        println( hindernis1.getPosition().x())
+
 
      when {
          window.getKeyState(GLFW_KEY_A) -> {
@@ -697,15 +697,13 @@ class Scene(private val window: GameWindow) {
 
     fun spurZufall():Float{
 
-       var random = kotlin.random.Random.nextInt(0,8)
-        if(random==0)return -1.17f
+       var random = kotlin.random.Random.nextInt(1,8)
         if(random==1)return -2.925f
         if(random==2)return -4.59f
         if(random==3)return -6.5f
         if(random==4)return 1.17f
         if(random==5)return 2.925f
-        if(random==6)return 4.59f
-        else return 6.5f
+        else return 4.59f
     }
 
 
