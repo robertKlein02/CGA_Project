@@ -466,7 +466,7 @@ class Scene(private val window: GameWindow) {
 
         if (nachRechts){
             renderable.translateLocal(Vector3f(  0.001f  * +dt,0f,0f))
-            if (renderable.getPosition().x() >= 6f){
+            if (renderable.getPosition().x() >= 7f){
                 nachLinks=true
                 nachRechts=false
             }
@@ -474,7 +474,7 @@ class Scene(private val window: GameWindow) {
 
         if(nachLinks){
             renderable.translateLocal(Vector3f(   0.001f  * -dt,0f,0f))
-            if (renderable.getPosition().x() <= -6f){
+            if (renderable.getPosition().x() <= -7f){
                 nachLinks=false
                 nachRechts=true
             }
