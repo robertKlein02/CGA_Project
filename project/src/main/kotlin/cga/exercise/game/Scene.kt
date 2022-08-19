@@ -46,8 +46,7 @@ class Scene(private val window: GameWindow) {
     private val meshListHindernis= mutableListOf<Mesh>()
     private val meshListStar= mutableListOf<Mesh>()
 
-    var nachRechts=true
-    var nachLinks=false
+
 
     var speed:Float=5f
     var level:Int=1
@@ -63,11 +62,11 @@ class Scene(private val window: GameWindow) {
 
 
 
-    lateinit var hindernis1:Renderable
-    lateinit var hindernis2:Renderable
-    lateinit var hindernis3:Renderable
-    lateinit var hindernis4:Renderable
-    lateinit var hindernis5:Renderable
+    var hindernis1=Hindernis()
+    var hindernis2=Hindernis()
+    var hindernis3=Hindernis()
+    var hindernis4=Hindernis()
+    var hindernis5=Hindernis()
 
     val star1=Star()
     val star2=Star()
@@ -356,11 +355,11 @@ class Scene(private val window: GameWindow) {
         checkCollisionStar(star4)
         checkCollisionStar(star5)
 
-        checkCollisionHindernis(hindernis1)
-        checkCollisionHindernis(hindernis2)
-        checkCollisionHindernis(hindernis3)
-        checkCollisionHindernis(hindernis4)
-        checkCollisionHindernis(hindernis5)
+        checkCollisionHindernis(hindernis1.hindernis)
+        checkCollisionHindernis(hindernis2.hindernis)
+        checkCollisionHindernis(hindernis3.hindernis)
+        checkCollisionHindernis(hindernis4.hindernis)
+        checkCollisionHindernis(hindernis5.hindernis)
 
         shaderInUse.use()
         activeCamera.bind(shaderInUse)
@@ -405,15 +404,15 @@ class Scene(private val window: GameWindow) {
         star5.star.rotateLocal(0f,0f,star5.star.getPosition().y() *0.05f*dt)
 
 
-        hindernis1.render(shaderInUse)
+        hindernis1.hindernis.render(shaderInUse)
         spotLight.bind(shaderInUse,"spot", activeCamera.getCalculateViewMatrix())
-        hindernis2.render(shaderInUse)
+        hindernis2.hindernis.render(shaderInUse)
         spotLight2.bind(shaderInUse,"spot2", activeCamera.getCalculateViewMatrix())
-        hindernis3.render(shaderInUse)
+        hindernis3.hindernis.render(shaderInUse)
         spotLight3.bind(shaderInUse,"spot3", activeCamera.getCalculateViewMatrix())
-        hindernis4.render(shaderInUse)
+        hindernis4.hindernis.render(shaderInUse)
         spotLight4.bind(shaderInUse,"spot4", activeCamera.getCalculateViewMatrix())
-        hindernis5.render(shaderInUse)
+        hindernis5.hindernis.render(shaderInUse)
         spotLight5.bind(shaderInUse,"spot5", activeCamera.getCalculateViewMatrix())
 
         shaderInUse.setUniform("farbe", Vector3f(0.4f,0.4f,0.4f))
@@ -462,21 +461,21 @@ class Scene(private val window: GameWindow) {
     }
 
 
-    fun hindernisBewegen(renderable: Renderable,dt: Float){
+    fun hindernisBewegen(hindernis: Hindernis,dt: Float){
 
-        if (nachRechts){
-            renderable.translateLocal(Vector3f(  0.1f*speed  * +dt,0f,0f))
-            if (renderable.getPosition().x() >= 7f){
-                nachLinks=true
-                nachRechts=false
+        if (hindernis.nachRechts){
+            hindernis.hindernis.translateLocal(Vector3f(  0.5f*speed  * +dt,0f,0f))
+            if (hindernis.hindernis.getPosition().x() >= 7f){
+                hindernis.nachLinks=true
+                hindernis.nachRechts=false
             }
         }
 
-        if(nachLinks){
-            renderable.translateLocal(Vector3f(   0.1f*speed  * -dt,0f,0f))
-            if (renderable.getPosition().x() <= -7f){
-                nachLinks=false
-                nachRechts=true
+        if(hindernis.nachLinks){
+            hindernis.hindernis.translateLocal(Vector3f(   0.5f*speed  * -dt,0f,0f))
+            if (hindernis.hindernis.getPosition().x() <= -7f){
+                hindernis.nachLinks=false
+                hindernis.nachRechts=true
             }
         }
     }
@@ -554,11 +553,11 @@ class Scene(private val window: GameWindow) {
         star4.eingesammelt=false
         star5.eingesammelt=false
 
-        hindernis1.setPosition(spurZufall(),-50f,car.getPosition().z()-20)
-        hindernis2.setPosition(spurZufall(),-50f,car.getPosition().z()-35)
-        hindernis3.setPosition(spurZufall(),-50f,car.getPosition().z()-50)
-        hindernis4.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
-        hindernis5.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
+        hindernis1.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-20)
+        hindernis2.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-35)
+        hindernis3.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-50)
+        hindernis4.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
+        hindernis5.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
 
         star1.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-12)
         star2.star.setPosition(spurZufall(),-49.5f,car.getPosition().z()-27)
@@ -586,18 +585,18 @@ class Scene(private val window: GameWindow) {
             level+=1
             spwanStar()
 
-            hindernis1=Renderable(meshListHindernis)
-            hindernis2=Renderable(meshListHindernis)
-            hindernis3=Renderable(meshListHindernis)
-            hindernis4=Renderable(meshListHindernis)
-            hindernis5=Renderable(meshListHindernis)
+            hindernis1.hindernis=Renderable(meshListHindernis)
+            hindernis2.hindernis=Renderable(meshListHindernis)
+            hindernis3.hindernis=Renderable(meshListHindernis)
+            hindernis4.hindernis=Renderable(meshListHindernis)
+            hindernis5.hindernis=Renderable(meshListHindernis)
 
 
-            hindernis1.setPosition(spurZufall(),-50f,car.getPosition().z()-20)
-            hindernis2.setPosition(spurZufall(),-50f,car.getPosition().z()-35)
-            hindernis3.setPosition(spurZufall(),-50f,car.getPosition().z()-50)
-            hindernis4.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
-            hindernis5.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
+            hindernis1.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-20)
+            hindernis2.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-35)
+            hindernis3.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-50)
+            hindernis4.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-65)
+            hindernis5.hindernis.setPosition(spurZufall(),-50f,car.getPosition().z()-80)
 
 
 
@@ -607,13 +606,13 @@ class Scene(private val window: GameWindow) {
             spotLight2 = SpotLight(Vector3f(0f, 0f, -2f), Vector3f(1f,1f,1f),
                 Vector3f(0.5f, 0.05f, 0.01f),Vector2f(toRadians(15f), toRadians(30f)))
 
-            spotLight3 = SpotLight(Vector3f(hindernis3.getPosition().x(), hindernis3.getPosition().y()+3, hindernis3.getPosition().z()+2), Vector3f(1f,1f,1f),
+            spotLight3 = SpotLight(Vector3f(hindernis3.hindernis.getPosition().x(), hindernis3.hindernis.getPosition().y()+3, hindernis3.hindernis.getPosition().z()+2), Vector3f(1f,1f,1f),
                 Vector3f(1f, 0.05f, 0.01f), Vector2f(toRadians(0f), toRadians(180f)))
 
-            spotLight4 = SpotLight(Vector3f(hindernis4.getPosition().x(), hindernis4.getPosition().y()+3, hindernis4.getPosition().z()+2), Vector3f(1f,1f,1f),
+            spotLight4 = SpotLight(Vector3f(hindernis4.hindernis.getPosition().x(), hindernis4.hindernis.getPosition().y()+3, hindernis4.hindernis.getPosition().z()+2), Vector3f(1f,1f,1f),
                 Vector3f(1f, 0.05f, 0.01f), Vector2f(toRadians(0f), toRadians(-180f)))
 
-            spotLight5 =  SpotLight(Vector3f(hindernis5.getPosition().x(), hindernis5.getPosition().y()+3, hindernis5.getPosition().z()+2), Vector3f(1f,1f,1f),
+            spotLight5 =  SpotLight(Vector3f(hindernis5.hindernis.getPosition().x(), hindernis5.hindernis.getPosition().y()+3, hindernis5.hindernis.getPosition().z()+2), Vector3f(1f,1f,1f),
                 Vector3f(1f, 0.05f, 0.01f), Vector2f(toRadians(0f), toRadians(90f)))
 
             spotLight.rotateLocal(toRadians(-10f), PI.toFloat(),0f)
@@ -697,13 +696,15 @@ class Scene(private val window: GameWindow) {
 
     fun spurZufall():Float{
 
-       var random = kotlin.random.Random.nextInt(1,8)
+       var random = kotlin.random.Random.nextInt(0,8)
+        if(random==0)return -1.17f
         if(random==1)return -2.925f
         if(random==2)return -4.59f
         if(random==3)return -6.5f
         if(random==4)return 1.17f
         if(random==5)return 2.925f
-        else return 4.59f
+        if(random==1)return 4.59f
+        else return 6.1f
     }
 
 
