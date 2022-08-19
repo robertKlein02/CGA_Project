@@ -77,6 +77,7 @@ class Scene(private val window: GameWindow) {
 
     val camera = TronCamera()
     val firstPersonCamera = TronCamera()
+    val gameOverCamera =TronCamera()
     private var activeCamera = camera
 
 
@@ -297,6 +298,10 @@ class Scene(private val window: GameWindow) {
         firstPersonCamera.translateLocal(Vector3f(0f, 4.5f, 2.5f))
 
 
+        //gameover Camera
+        gameOverCamera.rotateLocal(toRadians(30f), toRadians(180f), 0f)
+        gameOverCamera.translateLocal(Vector3f(0f, 4.5f, 15f))
+
 
         //---------------------------------------ModelLoader------------------------------------------
         car = ModelLoader.loadModel("assets/light Cycle/Car/SCI_FRS_13_HD.obj",
@@ -314,6 +319,7 @@ class Scene(private val window: GameWindow) {
 
         camera.parent = car
         firstPersonCamera.parent = car
+        gameOverCamera.parent=car
 
 
         //---------------------------------------SetPosition------------------------------------------
@@ -403,6 +409,8 @@ class Scene(private val window: GameWindow) {
         star4.star.rotateLocal(0f,0f,star4.star.getPosition().y() *0.05f*dt)
         star5.star.rotateLocal(0f,0f,star5.star.getPosition().y() *0.05f*dt)
 
+        gameOverCamera.rotateAroundPoint(0f,car.getPosition().y() *0.01f*dt,0f, Vector3f(car.getPosition()))
+
 
         hindernis1.hindernis.render(shaderInUse)
         spotLight.bind(shaderInUse,"spot", activeCamera.getCalculateViewMatrix())
@@ -465,7 +473,7 @@ class Scene(private val window: GameWindow) {
 
         if (hindernis.nachRechts){
             hindernis.hindernis.translateLocal(Vector3f(  0.5f*speed  * +dt,0f,0f))
-            if (hindernis.hindernis.getPosition().x() >= 7f){
+            if (hindernis.hindernis.getPosition().x() >= 6.5f){
                 hindernis.nachLinks=true
                 hindernis.nachRechts=false
             }
@@ -473,7 +481,7 @@ class Scene(private val window: GameWindow) {
 
         if(hindernis.nachLinks){
             hindernis.hindernis.translateLocal(Vector3f(   0.5f*speed  * -dt,0f,0f))
-            if (hindernis.hindernis.getPosition().x() <= -7f){
+            if (hindernis.hindernis.getPosition().x() <= -6.5f){
                 hindernis.nachLinks=false
                 hindernis.nachRechts=true
             }
@@ -537,8 +545,11 @@ class Scene(private val window: GameWindow) {
     fun gameReset(){
         println("NEW: Game")
 
+
         speed=5f
         points=0
+
+        activeCamera=camera
 
         ground.setPosition(0f,-50f,0f)
         car.setPosition(0f,-50f,40f)
@@ -679,7 +690,7 @@ class Scene(private val window: GameWindow) {
                 star.pointLight.setPosition(car.getPosition().x(),car.getPosition().y()+2,car.getPosition().z())
                 points= points+1
                 speed= speed+1
-                println("$points Stars cought")
+                println("$points Stars caught")
             }
         }
 
@@ -690,7 +701,10 @@ class Scene(private val window: GameWindow) {
 
         var minimumDistanz=1.2f
 
-        if (abs(renderable.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(renderable.getPosition().z() - car.getPosition().z())  < minimumDistanz) speed=0f
+        if (abs(renderable.getPosition().x() - car.getPosition().x()) < minimumDistanz  &&  abs(renderable.getPosition().z() - car.getPosition().z())  < minimumDistanz){
+            speed=0f
+            activeCamera=gameOverCamera
+        }
     }
 
 
