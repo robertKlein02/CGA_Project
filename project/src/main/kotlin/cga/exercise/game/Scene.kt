@@ -38,6 +38,7 @@ class Scene(private val window: GameWindow) {
     private val skyboxShader: ShaderProgram
     private val negativeShader: ShaderProgram
     private val normalShader: ShaderProgram
+    private val toonShader: ShaderProgram
     private var shaderInUse: ShaderProgram
 
     private val meshListBlock = mutableListOf<Mesh>()
@@ -78,6 +79,7 @@ class Scene(private val window: GameWindow) {
     val camera = TronCamera()
     val firstPersonCamera = TronCamera()
     val gameOverCamera =TronCamera()
+    val topviewcamera=TronCamera()
     private var activeCamera = camera
 
 
@@ -154,6 +156,7 @@ class Scene(private val window: GameWindow) {
         tronShader = ShaderProgram("assets/shaders/tron_vert.glsl", "assets/shaders/tron_frag.glsl")
         negativeShader = ShaderProgram("assets/shaders/tron_vert.glsl", "assets/shaders/negative_frag.glsl")
         normalShader = ShaderProgram("assets/shaders/normal_vert.glsl", "assets/shaders/normal_frag.glsl")
+        toonShader = ShaderProgram("assets/shaders/toon_vert.glsl", "assets/shaders/toon_frag.glsl")
         shaderInUse = tronShader
         //initial opengl state
 
@@ -297,6 +300,9 @@ class Scene(private val window: GameWindow) {
         firstPersonCamera.rotateLocal(toRadians(-10f),0f, 0f)
         firstPersonCamera.translateLocal(Vector3f(0f, 4.5f, 2.5f))
 
+        //Vogelperspektive Camera
+        topviewcamera.rotateLocal(toRadians(-45f),0f, 0f)
+        topviewcamera.translateLocal(Vector3f(0f, 0f, 40f))
 
         //gameover Camera
         gameOverCamera.rotateLocal(toRadians(30f), toRadians(180f), 0f)
@@ -319,6 +325,7 @@ class Scene(private val window: GameWindow) {
 
         camera.parent = car
         firstPersonCamera.parent = car
+        topviewcamera.parent =car
         gameOverCamera.parent=car
 
 
@@ -527,6 +534,9 @@ class Scene(private val window: GameWindow) {
         if (window.getKeyState(GLFW_KEY_2)) {
             shaderInUse = negativeShader
         }
+        if (window.getKeyState(GLFW_KEY_3)) {
+            shaderInUse = toonShader
+        }
         if (window.getKeyState(GLFW_KEY_SPACE)) {
             if (speed==0f) gameReset()
         }
@@ -536,7 +546,9 @@ class Scene(private val window: GameWindow) {
         if (window.getKeyState(GLFW_KEY_5)) {
             activeCamera = camera
         }
-
+        if (window.getKeyState(GLFW_KEY_6)) {
+            activeCamera = topviewcamera
+        }
  }
 
 
