@@ -19,6 +19,8 @@ Car and Stars
 - Speed erhöhen in bezug auf Anzahl der Sterne. 
 - Zufälliges platzieren von Objekten.
 - Drehen von Sternen um eigene Achse.
+- Hindernisse bewegen sich.
+- Camera wechsel bei "Game over"(Mit Rotation um Y-Achse von Car)  
 
 
 
