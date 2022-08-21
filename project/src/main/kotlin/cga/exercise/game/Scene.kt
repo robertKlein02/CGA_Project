@@ -484,7 +484,8 @@ class Scene(private val window: GameWindow) {
             blockRight.setPosition(blockRight.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
             curbLeft.setPosition(curbLeft.getPosition().x(), curbLeft.getPosition().y(), ground.getPosition().z())
             curbRight.setPosition(curbRight.getPosition().x(), curbRight.getPosition().y(), ground.getPosition().z())
-//            speedup.setPosition(curbRight.getPosition().x(), curbRight.getPosition().y(), ground.getPosition().z())
+            speedup.setPosition(speedup.getPosition().x(), speedup.getPosition().y(), ground.getPosition().z()-45f)
+
             star1.eingesammelt=false
             star2.eingesammelt=false
             star3.eingesammelt=false
