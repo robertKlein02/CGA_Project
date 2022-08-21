@@ -46,6 +46,7 @@ class Scene(private val window: GameWindow) {
     private val meshListGround = mutableListOf<Mesh>()
     private val meshListHindernis= mutableListOf<Mesh>()
     private val meshListStar= mutableListOf<Mesh>()
+    private val meshListSpeedup= mutableListOf<Mesh>()
 
 
 
@@ -60,7 +61,7 @@ class Scene(private val window: GameWindow) {
     var car : Renderable
     val curbLeft:Renderable
     val curbRight:Renderable
-
+    val speedup: Renderable
 
 
     var hindernis1=Hindernis()
@@ -201,6 +202,9 @@ class Scene(private val window: GameWindow) {
         val resStar: OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/stars.obj")
         val objStar: MutableList<OBJLoader.OBJMesh> = resStar.objects[0].meshes
 
+        var objResspeedup: OBJLoader.OBJResult = OBJLoader.loadOBJ("assets/models/speedup.obj")
+        val objMeshlistSpeedup: MutableList<OBJLoader.OBJMesh> = objResspeedup.objects[0].meshes
+
         val groundEmitTexture = Texture2D("assets/textures/str.png", true)
         val groundDiffTexture = Texture2D("assets/textures/ground_diff.png", true)
         val groundSpecTexture = Texture2D("assets/textures/ground_spec.jpg", true)
@@ -218,6 +222,11 @@ class Scene(private val window: GameWindow) {
         val starSpec = Texture2D("assets/textures/StarColor3.png", true)
 
 
+        val speedupEmit = Texture2D("assets/textures/speedup_emit3.jpg", true)
+        val speedupDiff = Texture2D("assets/textures/speedup_emit3.jpg", true)
+        val speedupSpec = Texture2D("assets/textures/speedup_emit3.jpg", true)
+
+
         val stride = 8 * 4
         val attrPos = VertexAttribute(3, GL_FLOAT, stride, 0)
         val attrTC = VertexAttribute(2, GL_FLOAT, stride, 3 * 4)
@@ -227,6 +236,10 @@ class Scene(private val window: GameWindow) {
         groundEmitTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
         groundDiffTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
         groundSpecTexture.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+
+        speedupEmit.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+        speedupDiff.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
+        speedupSpec.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
         starEmit.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
         starDiff.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
@@ -241,6 +254,9 @@ class Scene(private val window: GameWindow) {
 
         val curbShininess = 1f
         val curbTCMultiplier = Vector2f(15f,100f)
+
+        val speedupShininess = 10f
+        val speedupTCMultiplier = Vector2f(1f,1f)
 
 
         val groundMaterial = Material(groundDiffTexture, groundEmitTexture, groundSpecTexture, groundShininess,
@@ -258,6 +274,8 @@ class Scene(private val window: GameWindow) {
             groundTCMHindernuis)
 
         val starMaterial = Material(starDiff, starEmit, starSpec, 40.0f, Vector2f(1.0f))
+
+        val speedupMaterial = Material(speedupDiff,speedupEmit,speedupSpec,speedupShininess, speedupTCMultiplier)
 
 
 
@@ -282,12 +300,17 @@ class Scene(private val window: GameWindow) {
             meshListStar.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes, starMaterial))
         }
 
+        for (mesh in objMeshlistSpeedup) {
+            meshListSpeedup.add(Mesh(mesh.vertexData, mesh.indexData, vertexAttributes, speedupMaterial))
+        }
+
 
         ground = Renderable(meshListGround)
         blockLeft = Renderable(meshListBlock)
         blockRight = Renderable(meshListBlock)
         curbRight = Renderable(meshListCurb)
         curbLeft = Renderable(meshListCurb)
+        speedup = Renderable(meshListSpeedup)
 
 
         //---------------------------------------Camera------------------------------------------
@@ -337,6 +360,9 @@ class Scene(private val window: GameWindow) {
         curbRight.setPosition(8.5f, -50f,0f)
 
         ground.setPosition(0f,-50f,-0f)
+        speedup.setPosition(0f,-48f,-50f)
+        speedup.rotateLocal(toRadians(90f),0f, 0f)
+        speedup.scaleLocal(Vector3f(0.5f,0.2f,0.2f))
     }
 
     fun render(dt: Float, t: Float) {
@@ -439,16 +465,15 @@ class Scene(private val window: GameWindow) {
         curbRight.render(shaderInUse)
         curbLeft.render(shaderInUse)
         car.render(shaderInUse)
+        speedup.render(shaderInUse)
 
         shaderInUse.setUniform("farbe", Vector3f(0.5f))
 
 
-
-
-
         ground.render(shaderInUse)
-        var differenz= ground.getPosition().z() -car.getPosition().z()
 
+
+        var differenz= ground.getPosition().z() -car.getPosition().z()
 
 
         if (differenz>= (ground.getWorldZAxis().z()+45f)) {
@@ -459,6 +484,7 @@ class Scene(private val window: GameWindow) {
             blockRight.setPosition(blockRight.getPosition().x(), ground.getPosition().y(), ground.getPosition().z())
             curbLeft.setPosition(curbLeft.getPosition().x(), curbLeft.getPosition().y(), ground.getPosition().z())
             curbRight.setPosition(curbRight.getPosition().x(), curbRight.getPosition().y(), ground.getPosition().z())
+//            speedup.setPosition(curbRight.getPosition().x(), curbRight.getPosition().y(), ground.getPosition().z())
             star1.eingesammelt=false
             star2.eingesammelt=false
             star3.eingesammelt=false
