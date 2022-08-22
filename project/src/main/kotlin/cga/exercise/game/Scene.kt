@@ -328,8 +328,8 @@ class Scene(private val window: GameWindow) {
         topviewcamera.translateLocal(Vector3f(0f, 0f, 40f))
 
         //gameover Camera
-        gameOverCamera.rotateLocal(toRadians(30f), toRadians(180f), 0f)
-        gameOverCamera.translateLocal(Vector3f(0f, 4.5f, 15f))
+        gameOverCamera.rotateLocal(toRadians(60f), toRadians(180f), 0f)
+        gameOverCamera.translateLocal(Vector3f(0f, 15f, 35f))
 
 
         //---------------------------------------ModelLoader------------------------------------------
@@ -442,8 +442,8 @@ class Scene(private val window: GameWindow) {
         star4.star.rotateLocal(0f,0f,star4.star.getPosition().y() *0.05f*dt)
         star5.star.rotateLocal(0f,0f,star5.star.getPosition().y() *0.05f*dt)
 
-        gameOverCamera.rotateAroundPoint(0f,car.getPosition().y() *0.01f*dt,0f, Vector3f(car.getPosition()))
-
+//        gameOverCamera.rotateAroundPoint(0f,car.getPosition().y() *0.01f*dt,0f, Vector3f(car.getPosition()))
+        gameOverCamera.rotateAroundPoint(0f, 0.5f*dt,0f, Vector3f(0f))
 
         hindernis1.hindernis.render(shaderInUse)
         spotLight.bind(shaderInUse,"spot", activeCamera.getCalculateViewMatrix())
@@ -468,7 +468,6 @@ class Scene(private val window: GameWindow) {
         speedup.render(shaderInUse)
 
         shaderInUse.setUniform("farbe", Vector3f(0.5f))
-
 
         ground.render(shaderInUse)
 

@@ -86,14 +86,33 @@ float gamma = 2.2;
 float intensity = 0.0;
 //float gamma = 1;
 
+float toonvalue (float value){
+    float toonval;
+    if (value > 0.95)
+    toonval= 1.0;
+    if (value > 0.8)
+    toonval=0.8;
+    else if (value > 0.5)
+    toonval= 0.6;
+    else if (value > 0.4)
+    toonval=0.5;
+    else if (value > 0.25)
+    toonval= 0.4;
+    else
+    toonval= 0.1;
+
+    return toonval;
+}
+
+
 vec3 shade(vec3 n, vec3 l, vec3 v, vec3 dif, vec3 spec, float shine) {
 
     vec3 h = normalize(l+v);
 
-    vec3 diffuse = dif * max(0.0, dot(n, l));
+    vec3 diffuse = dif * toonvalue(max(0.0, dot(n, l)));
     vec3 reflectDir = reflect(-l, n);
 
-    float cosb = max(0.0, dot(v, reflectDir));
+    float cosb =  toonvalue(max(0.0, dot(v, reflectDir)));
 
     float specs = pow(max(dot(n, h), 0.0), shine*4);
 
@@ -118,7 +137,7 @@ vec3 spotLightIntensity(vec3 spotLightColour, float len, vec3 sp, vec3 spDir, ve
     float cosPhi = cos(spotLightAngle.x);
     float cosGamma = cos(spotLightAngle.y);
 
-    float intensity = clamp((cosTheta - cosGamma)/(cosPhi - cosGamma), 0, 1.0);
+    float intensity = toonvalue(clamp((cosTheta - cosGamma)/(cosPhi - cosGamma), 0, 1.0));
 
     return spotLightColour * intensity * attenuate(len, attParam);
 }
@@ -128,9 +147,9 @@ vec3 spot2LightIntensity(vec3 spot2LightColour, float len, vec3 sp, vec3 spDir, 
     float cosPhi = cos(spot2LightAngle.x);
     float cosGamma = cos(spot2LightAngle.y);
 
-    float intensity = clamp((cosTheta - cosGamma)/(cosPhi - cosGamma), 0, 1.0);
+    float intensity =  toonvalue(clamp((cosTheta - cosGamma)/(cosPhi - cosGamma), 0, 1.0));
 
-    return spot2LightColour * intensity * attenuate(len, attParam);
+    return  spot2LightColour * intensity * attenuate(len, attParam);
 }
 
 // Gamma performs gamma mapping
@@ -146,11 +165,6 @@ vec3 InvGamma(vec3 color) {
 
 void main() {
 
-
-
-    intensity = dot(lightDir,vertexData.normale);
-
-
     //Ambient
     // float ambientStrength = 0.01;
     //vec3 ambient = ambientStrength * spotLightColor;
@@ -158,7 +172,7 @@ void main() {
     vec3 n = normalize(vertexData.normale);
     vec3 v = normalize(vertexData.toCamera);
 
-
+    intensity = dot(lightDir,n);
 
     float lpLength = length(vertexData.toPointLight);
     vec3 lp = vertexData.toPointLight/lpLength;
@@ -199,26 +213,13 @@ void main() {
     vec3 emitCol = texture(emit, vertexData.tc).xyz;
     vec3 specularCol = texture(specular, vertexData.tc).xyz;
 
-    //diffCol=InvGamma(diffCol);
-    //emitCol=InvGamma(emitCol);
-    //specularCol=InvGamma(specularCol);
-
-
-
-
-
-    //vec3 diffCol = pow(texture(diff, vertexData.tc).rgb, vec3(gamma));
-    //vec3 emitCol = pow(texture(emit, vertexData.tc).rgb, vec3(gamma));
-    //vec3 specularCol = pow(texture(specular, vertexData.tc).rgb, vec3(gamma));
-
+    diffCol= diffCol * toonvalue((diffCol.r+diffCol.g+diffCol.b)/3);
+    emitCol= emitCol * toonvalue((emitCol.r+emitCol.g+emitCol.b)/3);
+    specularCol= specularCol * toonvalue((specularCol.r+specularCol.g+specularCol.b)/3);
 
 
     //emissive
     vec3 result = emitCol * farbe*1.5;
-
-
-
-
 
 
     //Pointlight
@@ -239,48 +240,15 @@ void main() {
 
 
 
-
-
-
     //Spotlight
     result += shade(n, sp, v, diffCol, specularCol, shininess) *
     spotLightIntensity(spotLightColor, spLength, sp, spotLightDir, spotLightAttParam) * 20;
 
-    //  result += shade(n, sp1, v, diffCol, specularCol, shininess) *
-    //  spotLightIntensity(spot1LightColor, sp1Length, sp1, spot1LightDir, spot1LightAttParam) ;
 
     result += shade(n, sp2, v, diffCol, specularCol, shininess) *
     spotLightIntensity(spot2LightColor, sp2Length, sp2, spot2LightDir, spot2LightAttParam)*20;
 
-    // result += shade(n, sp3, v, diffCol, specularCol, shininess) *
-    // spotLightIntensity(spot3LightColor, sp3Length, sp3, spot3LightDir, spot3LightAttParam);
 
-    // result += shade(n, sp4, v, diffCol, specularCol, shininess) *
-    // spotLightIntensity(spot4LightColor, sp4Length, sp4, spot4LightDir, spot4LightAttParam);
-
-    // result += shade(n, sp5, v, diffCol, specularCol, shininess) *
-    // spotLightIntensity(spot5LightColor, sp5Length, sp5, spot5LightDir, spot5LightAttParam);
-
-
-
-
-    //result= Gamma(result);
-
-    //Ambient
-    //result += ambient * specularCol;
     color = vec4(result, 1.0);
-
-    if (intensity > 0.95)
-    color = vec4(1.0,0.5,0.5,1.0);
-    else if (intensity > 0.5)
-    color = vec4(0.6,0.3,0.3,1.0);
-    else if (intensity > 0.25)
-    color = vec4(0.4,0.2,0.2,1.0);
-    else
-    color = vec4(0.2,0.1,0.1,1.0);
-
-
-
-
 
 }
