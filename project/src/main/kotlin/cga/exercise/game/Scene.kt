@@ -360,7 +360,7 @@ class Scene(private val window: GameWindow) {
         curbRight.setPosition(8.5f, -50f,0f)
 
         ground.setPosition(0f,-50f,-0f)
-        speedup.setPosition(0f,-48f,-50f)
+        speedup.setPosition(0f,-48f,-45f)
         speedup.rotateLocal(toRadians(90f),0f, 0f)
         speedup.scaleLocal(Vector3f(0.5f,0.2f,0.2f))
     }
@@ -596,6 +596,7 @@ class Scene(private val window: GameWindow) {
         blockRight.setPosition(11f, -50f,0f)
         curbLeft.setPosition(-8.5f, -50f,0f)
         curbRight.setPosition(8.5f, -50f,0f)
+        speedup.setPosition(0f,-48f,-45f)
 
         star1.eingesammelt=false
         star2.eingesammelt=false
